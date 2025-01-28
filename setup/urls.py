@@ -1,5 +1,5 @@
 """
-URL configuration for tprojects project.
+URL configuration for setup project.
 
 The `urlpatterns` list routes URLs to views. For more information please see:
     https://docs.djangoproject.com/en/5.1/topics/http/urls/
@@ -15,8 +15,10 @@ Including another URLconf
     2. Add a URL to urlpatterns:  path('blog/', include('blog.urls'))
 """
 from django.contrib import admin
-from django.urls import path
+from django.urls import path, include
 
+# Nessa lista devem ser colocadas as urls criadas no projects/urls.py
 urlpatterns = [
     path('admin/', admin.site.urls),
+    path("projects/", include("projects.urls"))
 ]
