@@ -20,5 +20,6 @@ from django.urls import path, include
 # Nessa lista devem ser colocadas as urls criadas no projects/urls.py
 urlpatterns = [
     path('admin/', admin.site.urls),
-    path("projects/", include("projects.urls"))
+    path('', include("projects.urls")),
+    path('home/', include("projects.urls"))
 ]
