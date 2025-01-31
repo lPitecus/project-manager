@@ -11,5 +11,19 @@ def index(request):
 
 def project(request, project_id):
     current_project = Project.objects.get(pk=project_id)
-    context = {"current_project": current_project}
+    project_tasks = Task.objects.filter(related_project=current_project)
+    context = {
+        "current_project": current_project,
+        "project_tasks": project_tasks
+    }
     return render(request, "projects/project.html", context)
+
+
+def task(request, project_id, task_id):
+    current_task = Task.objects.get(pk=task_id)
+    current_project = Project.objects.get(pk=project_id)
+    context = {
+        "current_task": current_task,
+        "current_project": current_project,
+    }
+    return render(request, "projects/task.html", context)

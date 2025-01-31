@@ -8,6 +8,19 @@
 <h1> Detalhes do projeto "{{ current_project.name }}"</h1>
 <h2>Descrição</h2>
 <p>{{ current_project.description }}</p>
+
+{% if project_tasks %}
+<h2>Tasks desse projeto</h2>
+<ul>
+    {% for task in project_tasks %}
+    <li><a href="/project/{{ current_project.id }}/task/{{ task.id }}">{{ task.name }}</a></li>
+    {% endfor %}
+</ul>
+
+{% else %}
+<p>Nenhuma tarefa por enquanto</p>
+
+{% endif %}
 <footer>
     <a href="/">Página Inicial</a>
 </footer>

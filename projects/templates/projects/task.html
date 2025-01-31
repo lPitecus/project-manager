@@ -1,0 +1,19 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+    <meta charset="UTF-8">
+    <title>task</title>
+</head>
+<body>
+<h1>Detalhes da tarefa "{{ current_task.name }}"</h1>
+<h2>Descrição</h2>
+<p>{{ current_task.description }}</p>
+<p>Tarefa criada em {{ current_task.created_at }}</p>
+<footer>
+    <ul>
+        <li><a href="/project/{{ current_project.id }}">Voltar para projeto: {{ current_project.name }}</a></li>
+        <li><a href="/">Voltar para tela inicial</a></li>
+    </ul>
+</footer>
+</body>
+</html>
