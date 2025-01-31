@@ -9,7 +9,7 @@
 {% if lista_projetos %}
 <ul>
     {% for projeto in lista_projetos %}
-    <li><a href="/project/{{ projeto.id }}">{{ projeto.name }}</a></li>
+    <li><a href="{% url 'project' projeto.id %}">{{ projeto.name }}</a></li>
     {% endfor %}
 </ul>
 {% else %}

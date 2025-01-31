@@ -13,7 +13,7 @@
 <h2>Tasks desse projeto</h2>
 <ul>
     {% for task in project_tasks %}
-    <li><a href="/project/{{ current_project.id }}/task/{{ task.id }}">{{ task.name }}</a></li>
+    <li><a href="{% url 'task' current_project.id task.id %}">{{ task.name }}</a></li>
     {% endfor %}
 </ul>
 
