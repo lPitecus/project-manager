@@ -1,0 +1,19 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+    <meta charset="UTF-8">
+    <title>cuida</title>
+</head>
+<body>
+<h1>Projetos disponiveis</h1>
+{% if lista_projetos %}
+<ul>
+    {% for projeto in lista_projetos %}
+    <li><a href="/project/{{ projeto.id }}">{{ projeto.name }}</a></li>
+    {% endfor %}
+</ul>
+{% else %}
+<p>Nenhum projeto encontrado</p>
+{% endif %}
+</body>
+</html>
