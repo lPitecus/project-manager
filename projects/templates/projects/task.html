@@ -11,7 +11,7 @@
 <p>Tarefa criada em {{ current_task.created_at }}</p>
 <footer>
     <ul>
-        <li><a href="{% url 'project' current_project.id %}">Voltar para projeto: {{ current_project.name }}</a></li>
+        <li><a href="{% url 'projects:project' current_project.id %}">Voltar para projeto: {{ current_project.name }}</a></li>
         <li><a href="/">Voltar para tela inicial</a></li>
     </ul>
 </footer>
