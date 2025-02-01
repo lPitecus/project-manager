@@ -11,5 +11,5 @@ urlpatterns = [
     path('project/<int:project_id>', views.project, name='project'),
     path('project/add_project', views.add_project, name='add_project'),
     path('project/<int:project_id>/task/<int:task_id>', views.task, name='task'),
-
+    path('project/add_project', views.add_project, name='add_orphan_task'),
 ]
