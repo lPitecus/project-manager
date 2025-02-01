@@ -1,26 +1,29 @@
-from django import forms
+from django.forms import ModelForm
+from django.forms.widgets import Textarea, TextInput
+
+from projects.models import Project
 
 
-class ProjectForm(forms.Form):
-    project_name = forms.CharField(
-        label='Nome do Projeto',
-        required=True,
-        max_length=100,
-        widget=forms.TextInput(
-            attrs={
-                'class': 'form-control',
-                'placeholder': 'Digite o nome do projeto',
-            }
-        )
-    )
-    project_description = forms.CharField(
-        label='Descrição do projeto',
-        required=False,
-        max_length=2000,
-        widget=forms.Textarea(
-            attrs={
-                'class': 'form-control',
-                'placeholder': 'Descrição do projeto',
-            }
-        )
-    )
+# https://docs.djangoproject.com/en/5.1/topics/forms/modelforms/#overriding-the-default-fields
+class ProjectForm(ModelForm):
+    class Meta:
+        model = Project
+        fields = ['name', 'description']
+        labels = {
+            'name': 'Nome do projeto',
+            'description': 'Descrição do projeto',
+        }
+        widgets = {
+            'name': TextInput(
+                attrs={
+                    'class': 'form-control',
+                    'placeholder': 'Digite o nome do projeto',
+                }
+            ),
+            'description': Textarea(
+                attrs={
+                    'class': 'form-control',
+                    'placeholder': 'Insira a descrição do projeto',
+                }
+            )
+        }

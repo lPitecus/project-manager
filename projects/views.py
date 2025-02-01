@@ -27,8 +27,8 @@ def add_project(request):
     if request.method == "POST":
         form = ProjectForm(request.POST)
         if form.is_valid():
-            project_name = form['project_name'].value()
-            project_description = form['project_description'].value()
+            project_name = form['name'].value()
+            project_description = form['description'].value()
 
             project = Project.objects.create(
                 name=project_name,
