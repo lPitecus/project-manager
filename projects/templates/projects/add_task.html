@@ -1,0 +1,41 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+    <meta charset="UTF-8">
+    <title>Adicionando task</title>
+</head>
+<body>
+{% if messages %}
+    {% for message in messages %}
+        <div class="alert alert-{{ message.tags }}">
+            {{ message }}
+        </div>
+    {% endfor %}
+{% endif %}
+
+<h1>Adicionando task</h1>
+<form method="POST" action="{% if current_project %}{% url 'projects:add_task' current_project.id %}{% else %}{% url 'projects:add_task_global' %}{% endif %}">
+{% csrf_token %}
+<div class="row">
+    {% with fields=form.visible_fields|slice:":-1" %}
+        {% for field in fields %}
+            <div class="col-12 col-lg-12" style="margin-bottom: 10px;">
+                <label style="color:#212121; margin-bottom: 5px;">{{ field.label }}</label>
+                {{ field }}
+            </div>
+        {% endfor %}
+
+    {% endwith %}
+
+    {% if not current_project %}
+        <label style="color:#212121; margin-bottom: 5px;">{{ form.related_project.label }}</label>
+        {{ form.related_project }}
+    {% endif %}
+
+</div>
+<div>
+    <button class="btn btn-success col-12" type="submit">Cadastrar Tarefa</button>
+</div>
+</form>
+</body>
+</html>

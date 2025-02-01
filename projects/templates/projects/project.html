@@ -28,6 +28,7 @@
 <p>Nenhuma tarefa por enquanto</p>
 
 {% endif %}
+<button><a href="{% url 'projects:add_task' current_project.id %}">Adicionar nova task</a> </button>
 <footer>
     <a href="/">Página Inicial</a>
 </footer>

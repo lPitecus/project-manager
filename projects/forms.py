@@ -1,7 +1,7 @@
 from django.forms import ModelForm
 from django.forms.widgets import Textarea, TextInput
 
-from projects.models import Project
+from projects.models import Project, Task
 
 
 # https://docs.djangoproject.com/en/5.1/topics/forms/modelforms/#overriding-the-default-fields
@@ -26,4 +26,14 @@ class ProjectForm(ModelForm):
                     'placeholder': 'Insira a descrição do projeto',
                 }
             )
+        }
+
+class TaskForm(ModelForm):
+    class Meta:
+        model = Task
+        fields = ['name', 'description', 'related_project']
+        labels = {
+            'name': 'Nome da tarefa',
+            'description': 'Descrição da tarefa',
+            'related_project': 'Projeto relacionado'
         }
