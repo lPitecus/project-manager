@@ -5,10 +5,17 @@
     <title>project</title>
 </head>
 <body>
+{% if messages %}
+    {% for message in messages %}
+        <div class="alert alert-{{ message.tags }}">
+            {{ message }}
+        </div>
+    {% endfor %}
+{% endif %}
 <h1> Detalhes do projeto "{{ current_project.name }}"</h1>
 <h2>Descrição</h2>
 <p>{{ current_project.description }}</p>
-
+<hr />
 {% if project_tasks %}
 <h2>Tasks desse projeto</h2>
 <ul>
