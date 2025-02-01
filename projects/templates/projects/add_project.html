@@ -11,7 +11,7 @@
     <div class="row">
         {% for field in form.visible_fields %}
         <div class="col-12 col-lg-12" style="margin-bottom: 10px;">
-            <label for="{{ field.id_for_label }}" style="color:#212121; margin-bottom: 5px;">{{ field.label }}</label>
+            <label style="color:#212121; margin-bottom: 5px;">{{ field.label }}</label>
             {{ field }}
         </div>
         {% for error in field.errors %}
@@ -26,5 +26,6 @@
         <button class="btn btn-success col-12" style="padding: top 5px;" type="submit">Cadastrar Projeto</button>
     </div>
 </form>
+<a href="{% url 'projects:index' %}">Voltar para o início</a>
 </body>
 </html>
