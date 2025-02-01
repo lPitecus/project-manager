@@ -1,5 +1,9 @@
-from django.shortcuts import render, get_object_or_404
+from django.http import HttpResponseRedirect
+from django.shortcuts import render, get_object_or_404, reverse
 from .models import Project, Task
+from projects.forms import ProjectForm
+from django.contrib import messages
+
 
 # Create your views here.
 def index(request):
@@ -16,6 +20,25 @@ def project(request, project_id):
         "project_tasks": project_tasks
     }
     return render(request, "projects/project.html", context)
+
+
+def add_project(request):
+    form = ProjectForm()
+    if request.method == "POST":
+        form = ProjectForm(request.POST)
+        if form.is_valid():
+            project_name = form['project_name'].value()
+            project_description = form['project_description'].value()
+
+            project = Project.objects.create(
+                name=project_name,
+                description=project_description
+            )
+            project.save()
+            messages.success(request, "Projeto criado com sucesso!")
+            return HttpResponseRedirect(reverse('projects:index'))
+    context = {"form": form}
+    return render(request, 'projects/add_project.html', context)
 
 
 def task(request, project_id, task_id):

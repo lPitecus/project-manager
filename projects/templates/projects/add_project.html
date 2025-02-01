@@ -1,0 +1,30 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+    <meta charset="UTF-8">
+    <title>Adicionando Projeto</title>
+</head>
+<body>
+<h1>Adicionando Projeto</h1>
+<form action="{% url 'projects:add_project' %}" method="POST">
+    {% csrf_token %}
+    <div class="row">
+        {% for field in form.visible_fields %}
+        <div class="col-12 col-lg-12" style="margin-bottom: 10px;">
+            <label for="{{ field.id_for_label }}" style="color:#212121; margin-bottom: 5px;">{{ field.label }}</label>
+            {{ field }}
+        </div>
+        {% for error in field.errors %}
+        <div class="alert alert-danger">
+            {{ error }}
+        </div>
+
+        {% endfor %}
+        {% endfor %}
+    </div>
+    <div>
+        <button class="btn btn-success col-12" style="padding: top 5px;" type="submit">Cadastrar Projeto</button>
+    </div>
+</form>
+</body>
+</html>

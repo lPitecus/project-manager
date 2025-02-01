@@ -15,5 +15,7 @@
 {% else %}
 <p>Nenhum projeto encontrado</p>
 {% endif %}
+<br>
+<button><a href="{% url 'projects:add_project' %}">Adicionar novo projeto</a></button>
 </body>
 </html>
