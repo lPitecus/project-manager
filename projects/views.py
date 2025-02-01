@@ -30,13 +30,13 @@ def add_project(request):
             project_name = form['name'].value()
             project_description = form['description'].value()
 
-            project = Project.objects.create(
+            new_project = Project.objects.create(
                 name=project_name,
                 description=project_description
             )
-            project.save()
+            new_project.save()
             messages.success(request, "Projeto criado com sucesso!")
-            return HttpResponseRedirect(reverse('projects:index'))
+            return HttpResponseRedirect(reverse('projects:project', args=(new_project.pk,)))
     context = {"form": form}
     return render(request, 'projects/add_project.html', context)
 
