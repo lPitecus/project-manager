@@ -1,9 +1,11 @@
+{% load static %}
 <!DOCTYPE html>
 <html lang="en">
 <head>
     <meta charset="UTF-8">
     <title>task</title>
 </head>
+<link rel="stylesheet" href="{% static 'projects/style.css' %}">
 <body>
 <h1>Detalhes da tarefa "{{ current_task.name }}"</h1>
 <h2>Descrição</h2>
