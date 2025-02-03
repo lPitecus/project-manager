@@ -53,35 +53,45 @@ def task(request, project_id, task_id):
 
 def add_task(request, project_id=None):
     """
-    - Se um `project_id` for passado, a task será adicionada diretamente ao projeto correspondente.
-    - Se não houver `project_id`, o usuário precisará escolher um projeto antes de criar a task.
+    Essa view tem comportamento dinâmico. Se ela for acessada via url task/add, ela não recebe o parametro project_id.
+    Isso significa que ela foi acessada fora de um projeto, e o campo de projeto relacionado na criação da task será
+    mostrado ao usuário. Caso essa view seja acessada pela url projects/<project_id>/task/add, ela recebe o parametro
+    project_id para definir automaticamente o campo related_project sem mostrar ao usuário.
+    :param request:
+    :param project_id:
+    :return:
     """
-    current_project = get_object_or_404(Project, pk=project_id) if project_id else None
-    form = TaskForm(request.POST or None)
+
+    project = None
+    form = TaskForm()
+
+    if project_id:
+        project = get_object_or_404(Project, id=project_id)
 
     if request.method == "POST":
+        form = TaskForm(request.POST)
         if form.is_valid():
-            # Pegando os dados do formulário corretamente usando cleaned_data
-            task_name = form.cleaned_data["name"]
-            task_description = form.cleaned_data["description"]
-            related_project = current_project or form.cleaned_data["related_project"]
+            task = form.save(commit=False)  # Criamos a task sem salvar imediatamente
 
-            # Criando e salvando a nova task
-            new_task = Task.objects.create(
-                name=task_name,
-                description=task_description,
-                related_project=related_project
-            )
-            new_task.save()
+            # Definir o projeto relacionado com base no que veio no POST
+            if project:
+                task.related_project = project
+            else:
+                related_project_id = request.POST.get("related_project")
+                if related_project_id:
+                    task.related_project = get_object_or_404(Project, id=related_project_id)
+                else:
+                    messages.error(request, "Selecione um projeto para a tarefa.")
+                    return render(request, "projects/add_task.html", {"form": form, "current_project": project})
+
+            task.save()
             messages.success(request, "Task criada com sucesso!")
 
-            # Redirecionando para a página do projeto ao qual a task pertence
-            return HttpResponseRedirect(reverse('projects:project', args=(related_project.id,)))
-        else:
-            messages.error(request, "Erro ao criar a task. Verifique os campos preenchidos.")
+            return HttpResponseRedirect(reverse('projects:project', args=(task.related_project.id,)))
 
     context = {
-        "form": form,
-        "current_project": current_project,
+        'form': form,
+        'current_project': project
     }
-    return render(request, "projects/add_task.html", context)
+    return render(request, 'projects/add_task.html', context)
+

@@ -1,4 +1,4 @@
-from django.forms import ModelForm
+from django.forms import ModelForm, ModelChoiceField
 from django.forms.widgets import Textarea, TextInput
 
 from projects.models import Project, Task
@@ -31,9 +31,9 @@ class ProjectForm(ModelForm):
 class TaskForm(ModelForm):
     class Meta:
         model = Task
-        fields = ['name', 'description', 'related_project']
+        fields = ['name', 'description', 'related_project']  # Mantemos 'related_project'
         labels = {
-            'name': 'Nome da tarefa',
-            'description': 'Descrição da tarefa',
-            'related_project': 'Projeto relacionado'
+            'name': 'Nome da Tarefa',
+            'description': 'Descrição da Tarefa',
+            'related_project': 'Projeto Relacionado'
         }
