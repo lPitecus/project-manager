@@ -3,31 +3,34 @@
 <html lang="en">
 <head>
     <meta charset="UTF-8">
-    <title>Adicionando Projeto</title>
+    <title>Adicionar Projeto</title>
+    <link rel="stylesheet" href="{% static 'projects/style.css' %}">
 </head>
-<link rel="stylesheet" href="{% static 'projects/style.css' %}">
 <body>
-<h1>Adicionando Projeto</h1>
-<form action="{% url 'projects:add_project' %}" method="POST">
-    {% csrf_token %}
-    <div class="row">
-        {% for field in form.visible_fields %}
-        <div class="col-12 col-lg-12" style="margin-bottom: 10px;">
-            <label style="color:#212121; margin-bottom: 5px;">{{ field.label }}</label>
-            {{ field }}
+<div class="container">
+    <div class="form-container">
+        <div class="form-header">
+            <h1>Adicionar Novo Projeto</h1>
         </div>
-        {% for error in field.errors %}
-        <div class="alert alert-danger">
-            {{ error }}
-        </div>
-
-        {% endfor %}
-        {% endfor %}
+        <form action="{% url 'projects:add_project' %}" method="POST">
+            {% csrf_token %}
+            {% for field in form.visible_fields %}
+                <div class="form-group">
+                    <label>{{ field.label }}</label>
+                    {{ field }}
+                    {% for error in field.errors %}
+                        <div class="alert alert-danger">
+                            {{ error }}
+                        </div>
+                    {% endfor %}
+                </div>
+            {% endfor %}
+            <div class="form-actions">
+                <a href="{% url 'projects:index' %}">Cancelar</a>
+                <button type="submit" class="submit-button">Criar Projeto</button>
+            </div>
+        </form>
     </div>
-    <div>
-        <button class="btn btn-success col-12" type="submit">Cadastrar Projeto</button>
-    </div>
-</form>
-<a href="{% url 'projects:index' %}">Voltar para o início</a>
+</div>
 </body>
 </html>

@@ -3,46 +3,58 @@
 <html lang="en">
 <head>
     <meta charset="UTF-8">
-    <title>Adicionando task</title>
+    <title>Adicionar Task</title>
+    <link rel="stylesheet" href="{% static 'projects/style.css' %}">
 </head>
-<link rel="stylesheet" href="{% static 'projects/style.css' %}">
 <body>
-{% if messages %}
-    {% for message in messages %}
-        <div class="alert alert-{{ message.tags }}">
-            {{ message }}
-        </div>
-    {% endfor %}
-{% endif %}
-
-<h1>Adicionando task</h1>
-<form method="post" action="
-    {% if current_project %}
-        {% url 'projects:add_task' current_project.id %}
-    {% else %}
-        {% url 'projects:add_task_global' %}
+<div class="container">
+    {% if messages %}
+        {% for message in messages %}
+            <div class="alert alert-{{ message.tags }}">
+                {{ message }}
+            </div>
+        {% endfor %}
     {% endif %}
-">
-    {% csrf_token %}
-    <fieldset>
-        <label>{{ form.name.label }}</label>
-        {{ form.name }}
 
-        <label>{{ form.description.label }}</label>
-        {{ form.description }}
+    <div class="form-container">
+        <div class="form-header">
+            <h1>Adicionar Nova Task</h1>
+        </div>
+        <form method="post" action="
+                {% if current_project %}
+                    {% url 'projects:add_task' current_project.id %}
+                {% else %}
+                    {% url 'projects:add_task_global' %}
+                {% endif %}
+            ">
+            {% csrf_token %}
+            <div class="form-group">
+                <label>{{ form.name.label }}</label>
+                {{ form.name }}
+            </div>
 
-        <!-- Definindo o value do projeto atual -->
-        <!-- Caso a task esteja sendo criada num projeto, definir o valor do campo "related_project" para tal projeto -->
-        {% if current_project %}
-            <input type="hidden" name="related_project" value="{{ current_project.id }}">
-            <!-- Se não, definir qual projeto a task se refere manualmente -->
-        {% else %}
-            <label>Projeto Relacionado:</label>
-            {{ form.related_project }}
-        {% endif %}
-    </fieldset>
+            <div class="form-group">
+                <label>{{ form.description.label }}</label>
+                {{ form.description }}
+            </div>
 
-    <input type="submit" value="Criar Task">
-</form>
+            {% if current_project %}
+                <input type="hidden" name="related_project" value="{{ current_project.id }}">
+            {% else %}
+                <div class="form-group">
+                    <label>{{ form.related_project.label }}</label>
+                    {{ form.related_project }}
+                </div>
+            {% endif %}
+
+            <div class="form-actions">
+                <a href="{% if current_project %}{% url 'projects:project' current_project.id %}{% else %}{% url 'projects:index' %}{% endif %}">
+                    Cancelar
+                </a>
+                <button type="submit" class="submit-button">Criar Task</button>
+            </div>
+        </form>
+    </div>
+</div>
 </body>
 </html>
