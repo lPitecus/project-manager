@@ -1,4 +1,4 @@
-from django.forms import ModelForm, ModelChoiceField
+from django.forms import ModelForm
 from django.forms.widgets import Textarea, TextInput
 
 from projects.models import Project, Task

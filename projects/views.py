@@ -1,15 +1,17 @@
 from django.http import HttpResponseRedirect
 from django.shortcuts import render, get_object_or_404, reverse
+from django.urls import reverse_lazy
+
 from .models import Project, Task
 from projects.forms import ProjectForm, TaskForm
 from django.contrib import messages
-
+from django.views import generic
 
 # Create your views here.
-def index(request):
-    lista_projetos = Project.objects.order_by("-created_at")
-    context = {"lista_projetos": lista_projetos}
-    return render(request, "projects/index.html", context)
+class IndexView(generic.ListView):
+    model = Project
+    template_name = "projects/index.html"
+    context_object_name = "lista_projetos"
 
 
 def project(request, project_id):
@@ -22,23 +24,16 @@ def project(request, project_id):
     return render(request, "projects/project.html", context)
 
 
-def add_project(request):
-    form = ProjectForm()
-    if request.method == "POST":
-        form = ProjectForm(request.POST)
-        if form.is_valid():
-            project_name = form.cleaned_data['name']
-            project_description = form.cleaned_data['description']
-
-            new_project = Project.objects.create(
-                name=project_name,
-                description=project_description
-            )
-            new_project.save()
-            messages.success(request, "Projeto criado com sucesso!")
-            return HttpResponseRedirect(reverse('projects:project', args=(new_project.pk,)))
-    context = {"form": form}
-    return render(request, 'projects/add_project.html', context)
+class ProjectCreateView(generic.edit.CreateView):
+    model = Project
+    template_name = "projects/add_project.html"
+    # O atributo form_class serve apenas para usar as labels e widgets definidos no forms.py.
+    # Caso for preferível usar o nome padrão dos campos (definido no models.py), basta comentar a linha abaixo.
+    form_class = ProjectForm
+    def form_valid(self, form):
+        response = super().form_valid(form)
+        messages.success(self.request, "Projeto criado com sucesso!")
+        return response
 
 
 def task(request, project_id, task_id):
@@ -94,4 +89,3 @@ def add_task(request, project_id=None):
         'current_project': project
     }
     return render(request, 'projects/add_task.html', context)
-
