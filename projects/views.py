@@ -15,16 +15,26 @@ class ProjectListView(generic.ListView):
     #                                             ^^^^^^^ ^^^^
     #                                      nome do modelo|nome do tipo de view genérica
     # Caso queira mudar o nome do objeto de contexto, basta mudar o parâmetro context_object_name
+    # https://docs.djangoproject.com/en/5.1/topics/class-based-views/generic-display/#making-friendly-template-contexts
 
 
-def project(request, project_id):
-    current_project = get_object_or_404(Project, pk=project_id)
-    project_tasks = Task.objects.filter(related_project=current_project)
-    context = {
-        "current_project": current_project,
-        "project_tasks": project_tasks
-    }
-    return render(request, "projects/project.html", context)
+class ProjectDetailView(generic.DetailView):
+    # A classe genérica DetailView espera que uma chave primária seja passada como um parâmetro
+    # na url chamado "pk" por padrão. Isso é usado para determinar qual objeto (nesse caso, um Project) deve
+    # ser recuperado do banco de dados.
+    model = Project
+    template_name = "projects/project.html"
+    context_object_name = "current_project"
+
+    def get_context_data(self, **kwargs):
+        # O override do metodo "get_context_data" permite que seja criado um objeto de contexto personalizado, baseado
+        # na chave primária passada na url. Isso serve para passar como contexto adicional objetos relacionados ao pk
+        # ou algo que não dependa dessa chave primária
+        context = super().get_context_data(**kwargs)  # Linha obrigatória para criar o objeto contexto.
+        # Adicionando tarefas relacionadas ao contexto
+        context["project_tasks"] = Task.objects.filter(related_project=self.object)
+        return context
+    # https://docs.djangoproject.com/en/5.1/topics/class-based-views/generic-display/#adding-extra-context
 
 
 class ProjectCreateView(generic.edit.CreateView):
