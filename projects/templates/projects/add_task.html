@@ -8,12 +8,12 @@
 <body>
 
 {% if messages %}
-        {% for message in messages %}
-            <div class="alert alert-{{ message.tags }}">
-                {{ message }}
-            </div>
-        {% endfor %}
-    {% endif %}
+    {% for message in messages %}
+        <div class="alert alert-{{ message.tags }}">
+            {{ message }}
+        </div>
+    {% endfor %}
+{% endif %}
 
 
 <h1>Adicionar Nova Task</h1>
@@ -25,30 +25,32 @@
                     {% url 'projects:add_task_global' %}
                 {% endif %}
             ">
-            {% csrf_token %}
+    {% csrf_token %}
 
     <label>{{ form.name.label }}</label>
-                {{ form.name }}
+    {{ form.name }}
 
 
     <label>{{ form.description.label }}</label>
-                {{ form.description }}
+    {{ form.description }}
 
 
     {% if current_project %}
-                <input type="hidden" name="related_project" value="{{ current_project.id }}">
-            {% else %}
+        <input type="hidden" name="related_project" value="{{ current_project.id }}">
+    {% else %}
 
         <label>{{ form.related_project.label }}</label>
-                    {{ form.related_project }}
+        {{ form.related_project }}
 
     {% endif %}
 
 
-    <a href="{% if current_project %}{% url 'projects:project' current_project.id %}{% else %}{% url 'projects:index' %}{% endif %}">
-                    Cancelar
-                </a>
-                <button type="submit" class="submit-button">Criar Task</button>
+    <a href="
+
+            {% if current_project %}{% url 'projects:project' current_project.id %}{% else %}{% url 'projects:index' %}{% endif %}">
+        Cancelar
+    </a>
+    <button type="submit" class="submit-button">Criar Task</button>
 
 </form>
 

@@ -7,53 +7,53 @@
 </head>
 <body>
 
-    {% if messages %}
+{% if messages %}
 
-            {% for message in messages %}
-                <div class="alert alert-{{ message.tags }}">
-                    {{ message }}
-                </div>
-            {% endfor %}
+    {% for message in messages %}
+        <div class="alert alert-{{ message.tags }}">
+            {{ message }}
+        </div>
+    {% endfor %}
 
-    {% endif %}
-
-
-    <a href="/">Projetos</a> / {{ current_project.name }}
+{% endif %}
 
 
-    <button class="btn-primary">
-                <a href="{% url 'projects:add_task' current_project.id %}">Adicionar Task</a>
-            </button>
+<a href="/">Projetos</a> / {{ current_project.name }}
 
 
-    <h1>{{ current_project.name }}</h1>
-
-    <h2>Descrição</h2>
-            <p>{{ current_project.description }}</p>
-
-
-    <h2>Tarefas</h2>
-        {% if project_tasks %}
-
-            {% for task in project_tasks %}
-
-                <h3>{{ task.name }}</h3>
-                            <span class="task-date">{{ task.created_at|date:"M d, Y" }}</span>
+<button class="btn-primary">
+    <a href="{% url 'projects:add_task' current_project.id %}">Adicionar Task</a>
+</button>
 
 
-                <p>{{ task.description|truncatewords:20 }}</p>
+<h1>{{ current_project.name }}</h1>
+
+<h2>Descrição</h2>
+<p>{{ current_project.description }}</p>
 
 
-                <a href="{% url 'projects:task' current_project.id task.id %}" class="view-task">Ver detalhes →</a>
+<h2>Tarefas</h2>
+{% if project_tasks %}
 
-            {% endfor %}
+    {% for task in project_tasks %}
 
-        {% else %}
+        <h3>{{ task.name }}</h3>
+        <span class="task-date">{{ task.created_at|date:"M d, Y" }}</span>
 
-            <p>Sem tarefas ainda</p>
-                <p>Comece adicionando sua primeira tarefa!</p>
 
-        {% endif %}
+        <p>{{ task.description|truncatewords:20 }}</p>
+
+
+        <a href="{% url 'projects:task' current_project.id task.id %}" class="view-task">Ver detalhes →</a>
+
+    {% endfor %}
+
+{% else %}
+
+    <p>Sem tarefas ainda</p>
+    <p>Comece adicionando sua primeira tarefa!</p>
+
+{% endif %}
 
 </body>
 </html>

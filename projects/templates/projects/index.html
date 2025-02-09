@@ -7,36 +7,36 @@
 </head>
 <body>
 
-        <h1>Gerenciador de Projetos</h1>
+<h1>Gerenciador de Projetos</h1>
 
-            <button class="btn-primary"><a href="{% url 'projects:add_project' %}">Novo Projeto +</a></button>
-            <button class="btn-secondary"><a href="{% url 'projects:add_task_global' %}">Nova Task</a></button>
-
-
-
-        {% if project_list %}
-
-            {% for projeto in project_list %}
+<button class="btn-primary"><a href="{% url 'projects:add_project' %}">Novo Projeto +</a></button>
+<button class="btn-secondary"><a href="{% url 'projects:add_task_global' %}">Nova Task</a></button>
 
 
-                <h2>{{ projeto.name }}</h2>
-                        <span class="task-count">{{ projeto.task_set.count }} tasks</span>
+
+{% if project_list %}
+
+    {% for projeto in project_list %}
 
 
-                <p>{{ projeto.description|truncatewords:30 }}</p>
+        <h2>{{ projeto.name }}</h2>
+        <span class="task-count">{{ projeto.task_set.count }} tasks</span>
 
 
-                <a href="{% url 'projects:project' projeto.id %}" class="view-project">Ver detalhes →</a>
+        <p>{{ projeto.description|truncatewords:30 }}</p>
 
 
-            {% endfor %}
+        <a href="{% url 'projects:project' projeto.id %}" class="view-project">Ver detalhes →</a>
 
-        {% else %}
 
-            <p>Nenhum projeto encontrado</p>
-            <p>Comece criando seu primeiro projeto!</p>
+    {% endfor %}
 
-        {% endif %}
+{% else %}
+
+    <p>Nenhum projeto encontrado</p>
+    <p>Comece criando seu primeiro projeto!</p>
+
+{% endif %}
 
 
 </body>

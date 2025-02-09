@@ -7,19 +7,20 @@
 </head>
 <body>
 
-        <h1>{{ current_task.name }}</h1>
+<h1>{{ current_task.name }}</h1>
 
-            Criado em {{ current_task.created_at }}
-
-
-        <h2>Descrição</h2>
-            <p>{{ current_task.description }}</p>
+Criado em {{ current_task.created_at }}
 
 
-        <ul>
-            <li><a href="{% url 'projects:project' current_project.id %}">← Voltar para o projeto: {{ current_project.name }}</a></li>
-            <li><a href="/">← Voltar para o início</a></li>
-        </ul>
+<h2>Descrição</h2>
+<p>{{ current_task.description }}</p>
+
+
+<ul>
+    <li><a href="{% url 'projects:project' current_project.id %}">← Voltar para o
+        projeto: {{ current_project.name }}</a></li>
+    <li><a href="/">← Voltar para o início</a></li>
+</ul>
 
 
 </body>
