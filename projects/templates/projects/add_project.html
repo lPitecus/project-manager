@@ -1,36 +1,30 @@
-{% load static %}
 <!DOCTYPE html>
 <html lang="en">
 <head>
     <meta charset="UTF-8">
     <title>Adicionar Projeto</title>
-    <link rel="stylesheet" href="{% static 'projects/style.css' %}">
 </head>
 <body>
-<div class="container">
-    <div class="form-container">
-        <div class="form-header">
-            <h1>Adicionar Novo Projeto</h1>
-        </div>
+
+<h1>Adicionar Novo Projeto</h1>
         <form action="{% url 'projects:add_project' %}" method="POST">
             {% csrf_token %}
             {% for field in form.visible_fields %}
-                <div class="form-group">
-                    <label>{{ field.label }}</label>
+
+                <label>{{ field.label }}</label>
                     {{ field }}
                     {% for error in field.errors %}
-                        <div class="alert alert-danger">
-                            {{ error }}
-                        </div>
+
+                        {{ error }}
+
                     {% endfor %}
-                </div>
+
             {% endfor %}
-            <div class="form-actions">
-                <a href="{% url 'projects:index' %}">Cancelar</a>
+
+            <a href="{% url 'projects:index' %}">Cancelar</a>
                 <button type="submit" class="submit-button">Criar Projeto</button>
-            </div>
+
         </form>
-    </div>
-</div>
+
 </body>
 </html>

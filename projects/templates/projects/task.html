@@ -1,29 +1,26 @@
-{% load static %}
 <!DOCTYPE html>
 <html lang="en">
 <head>
     <meta charset="UTF-8">
     <title>{{ current_task.name }}</title>
-    <link rel="stylesheet" href="{% static 'projects/style.css' %}">
+
 </head>
 <body>
-<div class="container">
-    <div class="task-detail">
+
         <h1>{{ current_task.name }}</h1>
-        <div class="task-metadata">
+
             Criado em {{ current_task.created_at }}
-        </div>
-        <div class="task-description">
-            <h2>Descrição</h2>
+
+
+        <h2>Descrição</h2>
             <p>{{ current_task.description }}</p>
-        </div>
-    </div>
-    <div class="back-nav">
+
+
         <ul>
             <li><a href="{% url 'projects:project' current_project.id %}">← Voltar para o projeto: {{ current_project.name }}</a></li>
             <li><a href="/">← Voltar para o início</a></li>
         </ul>
-    </div>
-</div>
+
+
 </body>
 </html>

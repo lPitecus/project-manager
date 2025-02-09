@@ -1,68 +1,59 @@
-{% load static %}
 <!DOCTYPE html>
 <html lang="en">
 <head>
     <meta charset="UTF-8">
     <title>{{ current_project.name }}</title>
-    <link rel="stylesheet" href="{% static 'projects/style.css' %}">
+
 </head>
 <body>
-<div class="container">
+
     {% if messages %}
-        <div class="messages">
+
             {% for message in messages %}
                 <div class="alert alert-{{ message.tags }}">
                     {{ message }}
                 </div>
             {% endfor %}
-        </div>
+
     {% endif %}
 
-    <header class="page-header">
-        <div class="breadcrumb">
-            <a href="/">Projetos</a> / {{ current_project.name }}
-        </div>
-        <div class="action-buttons">
-            <button class="btn-primary">
+
+    <a href="/">Projetos</a> / {{ current_project.name }}
+
+
+    <button class="btn-primary">
                 <a href="{% url 'projects:add_task' current_project.id %}">Adicionar Task</a>
             </button>
-        </div>
-    </header>
 
-    <div class="project-overview">
-        <h1>{{ current_project.name }}</h1>
-        <div class="project-description">
-            <h2>Descrição</h2>
+
+    <h1>{{ current_project.name }}</h1>
+
+    <h2>Descrição</h2>
             <p>{{ current_project.description }}</p>
-        </div>
-    </div>
 
-    <div class="tasks-section">
-        <h2>Tarefas</h2>
+
+    <h2>Tarefas</h2>
         {% if project_tasks %}
-            <div class="tasks-grid">
-                {% for task in project_tasks %}
-                    <div class="task-card">
-                        <div class="task-card-header">
-                            <h3>{{ task.name }}</h3>
+
+            {% for task in project_tasks %}
+
+                <h3>{{ task.name }}</h3>
                             <span class="task-date">{{ task.created_at|date:"M d, Y" }}</span>
-                        </div>
-                        <div class="task-card-body">
-                            <p>{{ task.description|truncatewords:20 }}</p>
-                        </div>
-                        <div class="task-card-footer">
-                            <a href="{% url 'projects:task' current_project.id task.id %}" class="view-task">Ver detalhes →</a>
-                        </div>
-                    </div>
-                {% endfor %}
-            </div>
+
+
+                <p>{{ task.description|truncatewords:20 }}</p>
+
+
+                <a href="{% url 'projects:task' current_project.id task.id %}" class="view-task">Ver detalhes →</a>
+
+            {% endfor %}
+
         {% else %}
-            <div class="empty-state">
-                <p>Sem tarefas ainda</p>
+
+            <p>Sem tarefas ainda</p>
                 <p>Comece adicionando sua primeira tarefa!</p>
-            </div>
+
         {% endif %}
-    </div>
-</div>
+
 </body>
 </html>

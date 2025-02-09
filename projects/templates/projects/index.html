@@ -1,47 +1,43 @@
-{% load static %}
 <!DOCTYPE html>
 <html lang="en">
 <head>
     <meta charset="UTF-8">
     <title>Projetos</title>
-    <link rel="stylesheet" href="{% static 'projects/style.css' %}">
+
 </head>
 <body>
-<div class="container">
-    <header class="page-header">
+
         <h1>Gerenciador de Projetos</h1>
-        <div class="action-buttons">
+
             <button class="btn-primary"><a href="{% url 'projects:add_project' %}">Novo Projeto +</a></button>
             <button class="btn-secondary"><a href="{% url 'projects:add_task_global' %}">Nova Task</a></button>
-        </div>
-    </header>
 
-    {% if project_list %}
-        <div class="projects-grid">
+
+
+        {% if project_list %}
+
             {% for projeto in project_list %}
-                <div class="project-card">
-                    <div class="project-card-header">
-                        <h2>{{ projeto.name }}</h2>
+
+
+                <h2>{{ projeto.name }}</h2>
                         <span class="task-count">{{ projeto.task_set.count }} tasks</span>
-                    </div>
-                    <div class="project-card-body">
-                        <p>{{ projeto.description|truncatewords:30 }}</p>
-                    </div>
-                    <div class="project-card-footer">
-                        <a href="{% url 'projects:project' projeto.id %}" class="view-project">Ver detalhes →</a>
-                    </div>
-                </div>
+
+
+                <p>{{ projeto.description|truncatewords:30 }}</p>
+
+
+                <a href="{% url 'projects:project' projeto.id %}" class="view-project">Ver detalhes →</a>
+
+
             {% endfor %}
-        </div>
-    {% else %}
-        <div class="empty-state">
+
+        {% else %}
+
             <p>Nenhum projeto encontrado</p>
             <p>Comece criando seu primeiro projeto!</p>
-        </div>
-    {% endif %}
-</div>
-<div class="container">
-    <img src="{% static 'projects/images/10817417.png' %}" alt="Robozinho azul">
-</div>
+
+        {% endif %}
+
+
 </body>
 </html>
