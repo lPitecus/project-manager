@@ -1,12 +1,24 @@
 from django.contrib import messages
-from django.http import HttpResponseRedirect
-from django.shortcuts import render, get_object_or_404, reverse
+from django.shortcuts import get_object_or_404, reverse
 from django.urls import reverse_lazy
 from django.views.generic import ListView, DetailView
 from django.views.generic.edit import CreateView, UpdateView, DeleteView
 
 from .forms import ProjectForm, TaskForm
 from .models import Project, Task
+
+
+class ProjectCreateView(CreateView):
+    model = Project
+    template_name = "projects/add_project.html"
+    # O atributo form_class serve apenas para usar as labels e widgets definidos no forms.py.
+    # Caso for preferível usar o nome padrão dos campos (definido no models.py), basta comentar a linha abaixo.
+    form_class = ProjectForm
+
+    def form_valid(self, form):
+        response = super().form_valid(form)
+        messages.success(self.request, "Projeto criado com sucesso!")
+        return response
 
 
 class ProjectListView(ListView):
@@ -39,18 +51,6 @@ class ProjectDetailView(DetailView):
     # https://docs.djangoproject.com/en/5.1/topics/class-based-views/generic-display/#adding-extra-context
 
 
-class ProjectCreateView(CreateView):
-    model = Project
-    template_name = "projects/add_project.html"
-    # O atributo form_class serve apenas para usar as labels e widgets definidos no forms.py.
-    # Caso for preferível usar o nome padrão dos campos (definido no models.py), basta comentar a linha abaixo.
-    form_class = ProjectForm
-    def form_valid(self, form):
-        response = super().form_valid(form)
-        messages.success(self.request, "Projeto criado com sucesso!")
-        return response
-
-
 class ProjectUpdateView(UpdateView):
     model = Project
     template_name = "projects/edit_project.html"
@@ -80,6 +80,39 @@ class ProjectDeleteView(DeleteView):
         return context
 
 
+class TaskCreateView(CreateView):
+    model = Task
+    form_class = TaskForm
+    template_name = "projects/add_task.html"
+
+    def get_form_kwargs(self):
+        # Adiciona o projeto relacionado ao formulário se `project_id` estiver presente na URL.
+        kwargs = super().get_form_kwargs()  # Obtém os argumentos padrão do formulário
+        project_id = self.kwargs.get("project_id")  # Obtém o `project_id` da URL
+
+        if project_id:
+            # Se um `project_id` foi passado na URL, preenche o campo related_project no formulário
+            kwargs["initial"] = {"related_project": get_object_or_404(Project, id=project_id)}
+
+        return kwargs  # Retorna os argumentos modificados
+
+    def form_valid(self, form):
+        # Define o projeto relacionado com base no `project_id` da URL ou no input do usuário.
+        project_id = self.kwargs.get("project_id")  # Obtém `project_id` da URL, se existir
+
+        if project_id:
+            # Se um `project_id` foi passado na URL, associa automaticamente a task a esse projeto
+            form.instance.related_project = get_object_or_404(Project, id=project_id)
+        elif not form.instance.related_project:
+            # Se a task for adicionada sem `project_id`, o usuário deve escolher um projeto manualmente
+            messages.error(self.request, "Selecione um projeto para a tarefa.")
+            return self.form_invalid(form)  # Retorna o formulário com erro
+
+        response = super().form_valid(form)  # Salva a task no banco de dados
+        messages.success(self.request, "Task criada com sucesso!")  # Exibe mensagem de sucesso
+        return response  # Retorna a resposta padrão
+
+
 class TaskDetailView(DetailView):
     model = Task
     template_name = "projects/task.html"
@@ -101,50 +134,9 @@ class TaskDetailView(DetailView):
         context["current_project"] = get_object_or_404(Project, pk=project_id)
         return context
 
-
-def add_task(request, project_id=None):
-    """
-    Essa view tem comportamento dinâmico. Se ela for acessada via url task/add, ela não recebe o parametro project_id.
-    Isso significa que ela foi acessada fora de um projeto, e o campo de projeto relacionado na criação da task será
-    mostrado ao usuário. Caso essa view seja acessada pela url projects/<project_id>/task/add, ela recebe o parametro
-    project_id para definir automaticamente o campo related_project sem mostrar ao usuário.
-    :param request:
-    :param project_id:
-    :return:
-    """
-
-    project = None
-    form = TaskForm()
-
-    if project_id:
-        project = get_object_or_404(Project, id=project_id)
-
-    if request.method == "POST":
-        form = TaskForm(request.POST)
-        if form.is_valid():
-            task = form.save(commit=False)  # Criamos a task sem salvar imediatamente
-
-            # Definir o projeto relacionado com base no que veio no POST
-            if project:
-                task.related_project = project
-            else:
-                related_project_id = request.POST.get("related_project")
-                if related_project_id:
-                    task.related_project = get_object_or_404(Project, id=related_project_id)
-                else:
-                    messages.error(request, "Selecione um projeto para a tarefa.")
-                    return render(request, "projects/add_task.html", {"form": form, "current_project": project})
-
-            task.save()
-            messages.success(request, "Task criada com sucesso!")
-
-            return HttpResponseRedirect(reverse('projects:project', args=(task.related_project.id,)))
-
-    context = {
-        'form': form,
-        'current_project': project
-    }
-    return render(request, 'projects/add_task.html', context)
+    def get_success_url(self):
+        # Redireciona para a página do projeto relacionado após a criação da tarefa.
+        return reverse('projects:project', args=[self.object.related_project.id])
 
 
 class TaskUpdateView(UpdateView):
