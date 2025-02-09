@@ -15,12 +15,9 @@ Criado em {{ current_task.created_at }}
 <h2>Descrição</h2>
 <p>{{ current_task.description }}</p>
 
-
-<ul>
-    <li><a href="{% url 'projects:project' current_project.id %}">← Voltar para o
-        projeto: {{ current_project.name }}</a></li>
-    <li><a href="/">← Voltar para o início</a></li>
-</ul>
+<hr>
+<p><a href="{% url 'projects:project' current_project.id %}">Voltar para o projeto: {{ current_project.name }}</a></p>
+<p><a href="/">Voltar para o início</a></p>
 
 
 </body>

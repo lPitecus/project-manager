@@ -1,13 +1,15 @@
 from django.contrib import messages
 from django.http import HttpResponseRedirect
 from django.shortcuts import render, get_object_or_404, reverse
-from django.views import generic
+from django.urls import reverse_lazy
+from django.views.generic import ListView, DetailView
+from django.views.generic.edit import CreateView, UpdateView, DeleteView
 
 from .forms import ProjectForm, TaskForm
 from .models import Project, Task
 
 
-class ProjectListView(generic.ListView):
+class ProjectListView(ListView):
     model = Project
     template_name = "projects/index.html"
     # Numa view genérica, o contexto é criado automaticamente com base no modelo usado e no tipo de genérico usado.
@@ -18,7 +20,7 @@ class ProjectListView(generic.ListView):
     # https://docs.djangoproject.com/en/5.1/topics/class-based-views/generic-display/#making-friendly-template-contexts
 
 
-class ProjectDetailView(generic.DetailView):
+class ProjectDetailView(DetailView):
     # A classe genérica DetailView espera que uma chave primária seja passada como um parâmetro
     # na url chamado "pk" por padrão. Isso é usado para determinar qual objeto (nesse caso, um Project) deve
     # ser recuperado do banco de dados.
@@ -37,7 +39,7 @@ class ProjectDetailView(generic.DetailView):
     # https://docs.djangoproject.com/en/5.1/topics/class-based-views/generic-display/#adding-extra-context
 
 
-class ProjectCreateView(generic.edit.CreateView):
+class ProjectCreateView(CreateView):
     model = Project
     template_name = "projects/add_project.html"
     # O atributo form_class serve apenas para usar as labels e widgets definidos no forms.py.
@@ -49,7 +51,7 @@ class ProjectCreateView(generic.edit.CreateView):
         return response
 
 
-class ProjectUpdateView(generic.edit.UpdateView):
+class ProjectUpdateView(UpdateView):
     model = Project
     template_name = "projects/edit_project.html"
     context_object_name = "current_project"
@@ -61,7 +63,19 @@ class ProjectUpdateView(generic.edit.UpdateView):
         return response
 
 
-class TaskDetailView(generic.DetailView):
+class ProjectDeleteView(DeleteView):
+    model = Project
+    template_name = "projects/delete_project.html"
+    context_object_name = "current_project"
+    success_url = reverse_lazy('projects:index')
+
+    def get_context_data(self, **kwargs):
+        context = super().get_context_data(**kwargs)
+        context["related_tasks"] = Task.objects.filter(related_project=self.object)
+        return context
+
+
+class TaskDetailView(DetailView):
     model = Task
     template_name = "projects/task.html"
     context_object_name = "current_task"

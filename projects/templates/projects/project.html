@@ -21,9 +21,6 @@
 <a href="/">Projetos</a> / {{ current_project.name }}
 
 
-<button class="btn-primary">
-    <a href="{% url 'projects:add_task' current_project.id %}">Adicionar Task</a>
-</button>
 
 
 <h1>{{ current_project.name }}</h1>
@@ -37,14 +34,14 @@
 
     {% for task in project_tasks %}
 
-        <h3>{{ task.name }}</h3>
+        <h3><a href="{% url 'projects:task' current_project.id task.id %}" class="view-task">{{ task.name }}</a></h3>
         <span class="task-date">{{ task.created_at|date:"M d, Y" }}</span>
 
 
         <p>{{ task.description|truncatewords:20 }}</p>
 
 
-        <a href="{% url 'projects:task' current_project.id task.id %}" class="view-task">Ver detalhes →</a>
+
 
     {% endfor %}
 
@@ -54,7 +51,17 @@
     <p>Comece adicionando sua primeira tarefa!</p>
 
 {% endif %}
-<a href="{% url 'projects:edit_project' current_project.id %}">Editar projeto</a>
+<br>
+<button class="btn-primary">
+    <a href="{% url 'projects:add_task' current_project.id %}">Adicionar Task</a>
+</button>
+<hr>
+<button>
+    <a href="{% url 'projects:edit_project' current_project.id %}">Editar projeto</a>
+</button>
+<button>
+    <a href="{% url 'projects:delete_project' current_project.id %}">Excluir projeto</a>
+</button>
 
 </body>
 </html>

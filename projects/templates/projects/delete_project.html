@@ -1,0 +1,29 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+    <meta charset="UTF-8">
+    <title>Deletar Projeto</title>
+</head>
+<body>
+
+<form method="post">
+    {% csrf_token %}
+    <h1>Você está excluindo o projeto "{{ current_project.name }}"</h1>
+    {% if related_tasks %}
+        <h2>Ao excluir esse projeto, você excluirá as seguintes tasks:</h2>
+        <ul>
+            {% for task in related_tasks %}
+                <li><a href="{% url 'projects:task' current_project.id task.id %}">{{ task.name }}</a></li>
+            {% endfor %}
+        </ul>
+    {% endif %}
+    <hr/>
+    <p>Tem certeza que deseja continuar?</p>
+    {{ form }}
+    <button type="submit">Excluir</button>
+    <button><a href="{% url 'projects:project' current_project.id %}">Cancelar</a></button>
+</form>
+
+
+</body>
+</html>
