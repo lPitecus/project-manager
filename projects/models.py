@@ -15,7 +15,7 @@ class Project(models.Model):
         Quando um formulário for preenchido para criar um objeto desse modelo, retorna a página
         de detalhes desse projeto
         """
-        return reverse('projects:project', kwargs={'project_id': self.pk})
+        return reverse('projects:project', kwargs={'pk': self.pk})
 
 class Task(models.Model):
     name = models.CharField(max_length=150)

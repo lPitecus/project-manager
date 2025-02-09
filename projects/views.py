@@ -49,14 +49,26 @@ class ProjectCreateView(generic.edit.CreateView):
         return response
 
 
-def task(request, project_id, task_id):
-    current_task = get_object_or_404(Task, pk=task_id)
-    current_project = get_object_or_404(Project, pk=project_id)
-    context = {
-        "current_task": current_task,
-        "current_project": current_project,
-    }
-    return render(request, "projects/task.html", context)
+class TaskDetailView(generic.DetailView):
+    model = Task
+    template_name = "projects/task.html"
+    context_object_name = "current_task"
+
+    def get_object(self, queryset=None):
+        # Override get_object to retrieve the specific Task object based on task_id and project_id.
+        project_id = self.kwargs.get("project_id")
+        task_id = self.kwargs.get("task_id")
+
+        # Fetch the specific task that belongs to the given project
+        return get_object_or_404(Task, pk=task_id, related_project_id=project_id)
+
+    def get_context_data(self, **kwargs):
+        context = super().get_context_data(**kwargs)
+        project_id = self.kwargs.get("project_id")
+
+        # Get the project using the project_id
+        context["current_project"] = get_object_or_404(Project, pk=project_id)
+        return context
 
 
 def add_task(request, project_id=None):
