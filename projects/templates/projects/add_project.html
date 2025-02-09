@@ -9,17 +9,7 @@
 <h1>Adicionar Novo Projeto</h1>
 <form action="{% url 'projects:add_project' %}" method="POST">
     {% csrf_token %}
-    {% for field in form.visible_fields %}
-
-        <label>{{ field.label }}</label>
-        {{ field }}
-        {% for error in field.errors %}
-
-            {{ error }}
-
-        {% endfor %}
-
-    {% endfor %}
+    {{ form.as_p }}
 
     <a href="{% url 'projects:index' %}">Cancelar</a>
     <button type="submit" class="submit-button">Criar Projeto</button>

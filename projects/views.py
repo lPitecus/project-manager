@@ -49,6 +49,18 @@ class ProjectCreateView(generic.edit.CreateView):
         return response
 
 
+class ProjectUpdateView(generic.edit.UpdateView):
+    model = Project
+    template_name = "projects/edit_project.html"
+    context_object_name = "current_project"
+    form_class = ProjectForm
+
+    def form_valid(self, form):
+        response = super().form_valid(form)
+        messages.success(self.request, "Projeto atualizado com sucesso!")
+        return response
+
+
 class TaskDetailView(generic.DetailView):
     model = Task
     template_name = "projects/task.html"

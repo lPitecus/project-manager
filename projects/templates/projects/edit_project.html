@@ -1,0 +1,20 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+    <meta charset="UTF-8">
+    <title>Adicionar Projeto</title>
+</head>
+<body>
+
+<h1>Editando Projeto "{{ current_project.name }}"</h1>
+<form method="POST">
+    {% csrf_token %}
+    {{ form.as_p }}
+
+    <a href="{% url 'projects:project' current_project.id %}">Cancelar</a>
+    <button type="submit" class="submit-button">Atualizar Projeto</button>
+
+</form>
+
+</body>
+</html>

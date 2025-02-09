@@ -23,16 +23,15 @@
                     {% url 'projects:add_task' current_project.id %}
                 {% else %}
                     {% url 'projects:add_task_global' %}
-                {% endif %}
-            ">
+                {% endif %}">
     {% csrf_token %}
 
     <label>{{ form.name.label }}</label>
-    {{ form.name }}
+    <p>{{ form.name }}</p>
 
 
     <label>{{ form.description.label }}</label>
-    {{ form.description }}
+    <p>{{ form.description }}</p>
 
 
     {% if current_project %}
@@ -40,16 +39,17 @@
     {% else %}
 
         <label>{{ form.related_project.label }}</label>
-        {{ form.related_project }}
+        <p>{{ form.related_project }}</p>
 
     {% endif %}
 
 
     <a href="
-
-            {% if current_project %}{% url 'projects:project' current_project.id %}{% else %}{% url 'projects:index' %}{% endif %}">
-        Cancelar
-    </a>
+    {% if current_project %}
+        {% url 'projects:project' current_project.id %}
+    {% else %}
+        {% url 'projects:index' %}
+    {% endif %}">Cancelar</a>
     <button type="submit" class="submit-button">Criar Task</button>
 
 </form>
