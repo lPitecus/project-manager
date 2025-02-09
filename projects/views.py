@@ -69,6 +69,11 @@ class ProjectDeleteView(DeleteView):
     context_object_name = "current_project"
     success_url = reverse_lazy('projects:index')
 
+    def form_valid(self, form):
+        response = super().form_valid(form)
+        messages.success(self.request, "Projeto excluído com sucesso!")
+        return response
+
     def get_context_data(self, **kwargs):
         context = super().get_context_data(**kwargs)
         context["related_tasks"] = Task.objects.filter(related_project=self.object)
@@ -140,3 +145,59 @@ def add_task(request, project_id=None):
         'current_project': project
     }
     return render(request, 'projects/add_task.html', context)
+
+
+class TaskUpdateView(UpdateView):
+    model = Task
+    template_name = "projects/edit_task.html"
+    context_object_name = "current_task"
+    form_class = TaskForm
+
+    def form_valid(self, form):
+        response = super().form_valid(form)
+        messages.success(self.request, "Tarefa atualizada com sucesso!")
+        return response
+
+    def get_context_data(self, **kwargs):
+        context = super().get_context_data(**kwargs)
+        project_id = self.kwargs.get("project_id")
+
+        # Get the project using the project_id
+        context["current_project"] = get_object_or_404(Project, pk=project_id)
+        return context
+
+    def get_object(self, queryset=None):
+        # Override get_object to retrieve the specific Task object based on task_id and project_id.
+        project_id = self.kwargs.get("project_id")
+        task_id = self.kwargs.get("task_id")
+
+        # Fetch the specific task that belongs to the given project
+        return get_object_or_404(Task, pk=task_id, related_project_id=project_id)
+
+
+class TaskDeleteView(DeleteView):
+    model = Task
+    template_name = "projects/delete_task.html"
+    context_object_name = "current_task"
+
+    def form_valid(self, form):
+        response = super().form_valid(form)
+        messages.success(self.request, "Tarefa excluída com sucesso!")
+        return response
+
+    def get_success_url(self):
+        return reverse_lazy('projects:project', kwargs={'pk': self.object.related_project_id})
+
+    def get_context_data(self, **kwargs):
+        context = super().get_context_data(**kwargs)
+        project_id = self.kwargs.get("project_id")
+        context["current_project"] = get_object_or_404(Project, pk=project_id)
+        return context
+
+    def get_object(self, queryset=None):
+        # Override get_object to retrieve the specific Task object based on task_id and project_id.
+        project_id = self.kwargs.get("project_id")
+        task_id = self.kwargs.get("task_id")
+
+        # Fetch the specific task that belongs to the given project
+        return get_object_or_404(Task, pk=task_id, related_project_id=project_id)

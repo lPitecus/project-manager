@@ -11,10 +11,8 @@ class Project(models.Model):
 
 
     def get_absolute_url(self):
-        """
-        Quando um formulário for preenchido para criar um objeto desse modelo, retorna a página
-        de detalhes desse projeto
-        """
+        # Quando um formulário for preenchido para criar um objeto desse modelo, retorna a página
+        # de detalhes desse projeto
         return reverse('projects:project', kwargs={'pk': self.pk})
 
 class Task(models.Model):
@@ -24,3 +22,8 @@ class Task(models.Model):
     related_project = models.ForeignKey(Project, on_delete=models.CASCADE)
     def __str__(self):
         return self.name
+
+    def get_absolute_url(self):
+        # Quando um formulário for preenchido para criar um objeto desse modelo, retorna a página
+        # de detalhes desse projeto
+        return reverse('projects:task', kwargs={'project_id': self.related_project_id, 'task_id': self.id})

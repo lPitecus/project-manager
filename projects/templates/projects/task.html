@@ -6,6 +6,15 @@
 
 </head>
 <body>
+{% if messages %}
+
+    {% for message in messages %}
+        <div class="alert alert-{{ message.tags }}">
+            {{ message }}
+        </div>
+    {% endfor %}
+
+{% endif %}
 
 <h1>{{ current_task.name }}</h1>
 
@@ -16,6 +25,12 @@ Criado em {{ current_task.created_at }}
 <p>{{ current_task.description }}</p>
 
 <hr>
+<button>
+    <a href="{% url 'projects:edit_task' current_project.id current_task.id %}">Editar task</a>
+</button>
+<button>
+    <a href="{% url 'projects:delete_task' current_project.id current_task.id %}">Excluir task</a>
+</button>
 <p><a href="{% url 'projects:project' current_project.id %}">Voltar para o projeto: {{ current_project.name }}</a></p>
 <p><a href="/">Voltar para o início</a></p>
 

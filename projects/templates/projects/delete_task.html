@@ -1,0 +1,21 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+    <meta charset="UTF-8">
+    <title>Deletar Projeto</title>
+</head>
+<body>
+
+<form method="post">
+    {% csrf_token %}
+    <h1>Você está excluindo a task "{{ current_task.name }}"</h1>
+    <hr/>
+    <p>Tem certeza que deseja continuar?</p>
+    {{ form }}
+    <button type="submit">Excluir</button>
+    <button><a href="{% url 'projects:task' current_project.id current_task.id %}">Cancelar</a></button>
+</form>
+
+
+</body>
+</html>

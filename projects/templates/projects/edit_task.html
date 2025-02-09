@@ -1,0 +1,20 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+    <meta charset="UTF-8">
+    <title>Adicionar Projeto</title>
+</head>
+<body>
+
+<h1>Editando Task "{{ current_project.name }}"</h1>
+<form method="POST">
+    {% csrf_token %}
+    {{ form.as_p }}
+
+    <button><a href="{% url 'projects:task' current_project.id current_task.id %}">Cancelar</a></button>
+    <button type="submit" class="submit-button">Atualizar Projeto</button>
+
+</form>
+
+</body>
+</html>
