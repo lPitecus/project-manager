@@ -38,6 +38,9 @@
 
 {% endif %}
 
-
+<form method="post" action="{% url 'users:logout' %}">
+    {% csrf_token %}
+    <button type="submit">Fazer Logout</button>
+</form>
 </body>
 </html>
