@@ -1,17 +1,20 @@
+from django.contrib import messages
 from django.http import HttpResponseRedirect
 from django.shortcuts import render, get_object_or_404, reverse
-from django.urls import reverse_lazy
-
-from .models import Project, Task
-from projects.forms import ProjectForm, TaskForm
-from django.contrib import messages
 from django.views import generic
 
-# Create your views here.
-class IndexView(generic.ListView):
+from .forms import ProjectForm, TaskForm
+from .models import Project, Task
+
+
+class ProjectListView(generic.ListView):
     model = Project
     template_name = "projects/index.html"
-    context_object_name = "lista_projetos"
+    # Numa view genérica, o contexto é criado automaticamente com base no modelo usado e no tipo de genérico usado.
+    # Nesse caso, o nome do objeto de contexto é "project_list"
+    #                                             ^^^^^^^ ^^^^
+    #                                      nome do modelo|nome do tipo de view genérica
+    # Caso queira mudar o nome do objeto de contexto, basta mudar o parâmetro context_object_name
 
 
 def project(request, project_id):
