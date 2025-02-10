@@ -51,6 +51,8 @@
     <p>Comece adicionando sua primeira tarefa!</p>
 
 {% endif %}
+<p>Projeto criado por {{ current_project.created_by.username }}</p>
+<p>Última modificação por {{ current_project.last_edited_by.username }}</p>
 <br>
 <button class="btn-primary">
     <a href="{% url 'projects:add_task' current_project.id %}">Adicionar Task</a>

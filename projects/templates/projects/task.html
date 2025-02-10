@@ -24,6 +24,9 @@ Criado em {{ current_task.created_at }}
 <h2>Descrição</h2>
 <p>{{ current_task.description }}</p>
 
+<p>Task criada por {{ current_task.created_by.username }}</p>
+<p>Última modificação por {{ current_task.last_edited_by.username }}</p>
+
 <hr>
 <button>
     <a href="{% url 'projects:edit_task' current_project.id current_task.id %}">Editar task</a>

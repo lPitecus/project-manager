@@ -1,4 +1,5 @@
 from django.contrib import messages
+from django.contrib.auth.mixins import LoginRequiredMixin
 from django.shortcuts import get_object_or_404, reverse
 from django.urls import reverse_lazy
 from django.views.generic import ListView, DetailView
@@ -8,7 +9,9 @@ from .forms import ProjectForm, TaskForm
 from .models import Project, Task
 
 
-class ProjectCreateView(CreateView):
+class ProjectCreateView(LoginRequiredMixin, CreateView):
+    login_url = "/users/login/"
+    redirect_field_name = "projects/add_project.html"
     model = Project
     template_name = "projects/add_project.html"
     # O atributo form_class serve apenas para usar as labels e widgets definidos no forms.py.
@@ -16,12 +19,16 @@ class ProjectCreateView(CreateView):
     form_class = ProjectForm
 
     def form_valid(self, form):
+        form.instance.created_by = self.request.user
+        form.instance.last_edited_by = self.request.user
         response = super().form_valid(form)
         messages.success(self.request, "Projeto criado com sucesso!")
         return response
 
 
-class ProjectListView(ListView):
+class ProjectListView(LoginRequiredMixin, ListView):
+    login_url = "/users/login/"
+    redirect_field_name = "projects/index.html"
     model = Project
     template_name = "projects/index.html"
     # Numa view genérica, o contexto é criado automaticamente com base no modelo usado e no tipo de genérico usado.
@@ -32,10 +39,12 @@ class ProjectListView(ListView):
     # https://docs.djangoproject.com/en/5.1/topics/class-based-views/generic-display/#making-friendly-template-contexts
 
 
-class ProjectDetailView(DetailView):
+class ProjectDetailView(LoginRequiredMixin, DetailView):
     # A classe genérica DetailView espera que uma chave primária seja passada como um parâmetro
     # na url chamado "pk" por padrão. Isso é usado para determinar qual objeto (nesse caso, um Project) deve
     # ser recuperado do banco de dados.
+    login_url = "/users/login/"
+    redirect_field_name = "projects/project.html"
     model = Project
     template_name = "projects/project.html"
     context_object_name = "current_project"
@@ -51,19 +60,24 @@ class ProjectDetailView(DetailView):
     # https://docs.djangoproject.com/en/5.1/topics/class-based-views/generic-display/#adding-extra-context
 
 
-class ProjectUpdateView(UpdateView):
+class ProjectUpdateView(LoginRequiredMixin, UpdateView):
+    login_url = "/users/login/"
+    redirect_field_name = "projects/edit_project.html"
     model = Project
     template_name = "projects/edit_project.html"
     context_object_name = "current_project"
     form_class = ProjectForm
 
     def form_valid(self, form):
+        form.instance.last_edited_by = self.request.user
         response = super().form_valid(form)
         messages.success(self.request, "Projeto atualizado com sucesso!")
         return response
 
 
-class ProjectDeleteView(DeleteView):
+class ProjectDeleteView(LoginRequiredMixin, DeleteView):
+    login_url = "/users/login/"
+    redirect_field_name = "projects/index.html"
     model = Project
     template_name = "projects/delete_project.html"
     context_object_name = "current_project"
@@ -80,7 +94,9 @@ class ProjectDeleteView(DeleteView):
         return context
 
 
-class TaskCreateView(CreateView):
+class TaskCreateView(LoginRequiredMixin, CreateView):
+    login_url = "/users/login/"
+    redirect_field_name = "projects/add_task.html"
     model = Task
     form_class = TaskForm
     template_name = "projects/add_task.html"
@@ -108,12 +124,16 @@ class TaskCreateView(CreateView):
             messages.error(self.request, "Selecione um projeto para a tarefa.")
             return self.form_invalid(form)  # Retorna o formulário com erro
 
+        form.instance.created_by = self.request.user
+        form.instance.last_edited_by = self.request.user
         response = super().form_valid(form)  # Salva a task no banco de dados
         messages.success(self.request, "Task criada com sucesso!")  # Exibe mensagem de sucesso
         return response  # Retorna a resposta padrão
 
 
-class TaskDetailView(DetailView):
+class TaskDetailView(LoginRequiredMixin, DetailView):
+    login_url = "/users/login/"
+    redirect_field_name = "projects/task.html"
     model = Task
     template_name = "projects/task.html"
     context_object_name = "current_task"
@@ -139,13 +159,16 @@ class TaskDetailView(DetailView):
         return reverse('projects:project', args=[self.object.related_project.id])
 
 
-class TaskUpdateView(UpdateView):
+class TaskUpdateView(LoginRequiredMixin, UpdateView):
+    login_url = "/users/login/"
+    redirect_field_name = "projects/edit_task.html"
     model = Task
     template_name = "projects/edit_task.html"
     context_object_name = "current_task"
     form_class = TaskForm
 
     def form_valid(self, form):
+        form.instance.last_edited_by = self.request.user
         response = super().form_valid(form)
         messages.success(self.request, "Tarefa atualizada com sucesso!")
         return response
@@ -167,7 +190,9 @@ class TaskUpdateView(UpdateView):
         return get_object_or_404(Task, pk=task_id, related_project_id=project_id)
 
 
-class TaskDeleteView(DeleteView):
+class TaskDeleteView(LoginRequiredMixin, DeleteView):
+    login_url = "/users/login/"
+    redirect_field_name = "projects/index.html"
     model = Task
     template_name = "projects/delete_task.html"
     context_object_name = "current_task"
