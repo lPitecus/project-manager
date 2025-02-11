@@ -1,6 +1,7 @@
 from django.contrib import messages
 from django.shortcuts import render, redirect
 
+from users.models import Profile
 from .forms import UserRegisterForm
 
 
@@ -9,6 +10,8 @@ def register(request):
         form = UserRegisterForm(request.POST)
         if form.is_valid():
             user = form.save()  # Salva o usuário no banco
+            # Ensure the profile exists
+            Profile.objects.get_or_create(user=user)
             # Atualiza os campos do perfil
             user.profile.bio = form.cleaned_data["biography"]
             user.profile.birth_date = form.cleaned_data["birth_date"]

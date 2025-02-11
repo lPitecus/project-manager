@@ -15,6 +15,9 @@
 
 <header>
     <h1><a href="{% url 'projects:index' %}">Gerenciador de Projetos</a></h1>
+    {% if greeting %}
+        <p>{{ greeting }}, {{ user.username }}</p>
+    {% endif %}
     <nav>
         <ul>
             <li><a href="{% url 'projects:add_project' %}">Novo Projeto</a></li>
@@ -36,7 +39,7 @@
 </main>
 
 <footer>
-    <p>&copy; 2025 Gerenciador de Projetos</p>
+    <p>&copy; {{ current_datetime.year }} Gerenciador de Projetos</p>
 </footer>
 </body>
 </html>
