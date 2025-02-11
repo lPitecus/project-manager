@@ -3,6 +3,8 @@
 {% block title %}Gerenciador de Projetos{% endblock %}
 
 {% block content %}
+    <p><a href="{% url 'projects:add_project' %}">Novo Projeto</a></p>
+    <p><a href="{% url 'projects:add_task_global' %}">Nova Task</a></p>
 {% if project_list %}
 
     {% for projeto in project_list %}

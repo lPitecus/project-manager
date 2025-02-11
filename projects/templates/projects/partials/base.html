@@ -20,8 +20,6 @@
     {% endif %}
     <nav>
         <ul>
-            <li><a href="{% url 'projects:add_project' %}">Novo Projeto</a></li>
-            <li><a href="{% url 'projects:add_task_global' %}">Nova Task</a></li>
             {% if user.is_authenticated %}
                 <form method="post" action="{% url 'users:logout' %}">
                     {% csrf_token %}
@@ -31,6 +29,7 @@
         </ul>
     </nav>
 </header>
+<hr>
 
 <main>
     {% block content %}
