@@ -1,0 +1,42 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+    <meta charset="UTF-8">
+    <title>{% block title %}Project Manager{% endblock %}</title>
+</head>
+<body>
+{% if messages %}
+    {% for message in messages %}
+        <div class="alert alert-{{ message.tags }}">
+            {{ message }}
+        </div>
+    {% endfor %}
+{% endif %}
+
+<header>
+    <h1><a href="{% url 'projects:index' %}">Gerenciador de Projetos</a></h1>
+    <nav>
+        <ul>
+            <li><a href="{% url 'projects:add_project' %}">Novo Projeto</a></li>
+            <li><a href="{% url 'projects:add_task_global' %}">Nova Task</a></li>
+            {% if user.is_authenticated %}
+                <form method="post" action="{% url 'users:logout' %}">
+                    {% csrf_token %}
+                    <button type="submit">Fazer Logout</button>
+                </form>
+            {% endif %}
+        </ul>
+    </nav>
+</header>
+
+<main>
+    {% block content %}
+        <!-- Specific page content goes here -->
+    {% endblock %}
+</main>
+
+<footer>
+    <p>&copy; 2025 Gerenciador de Projetos</p>
+</footer>
+</body>
+</html>

@@ -1,11 +1,8 @@
-<!DOCTYPE html>
-<html lang="en">
-<head>
-    <meta charset="UTF-8">
-    <title>Deletar Projeto</title>
-</head>
-<body>
+{% extends "projects/partials/base.html" %}
 
+{% block title %}Deletar Task{% endblock %}
+
+{% block content %}
 <form method="post">
     {% csrf_token %}
     <h1>Você está excluindo a task "{{ current_task.name }}"</h1>
@@ -15,7 +12,4 @@
     <button type="submit">Excluir</button>
     <button><a href="{% url 'projects:task' current_project.id current_task.id %}">Cancelar</a></button>
 </form>
-
-
-</body>
-</html>
+{% endblock %}

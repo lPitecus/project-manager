@@ -1,25 +1,10 @@
-<!DOCTYPE html>
-<html lang="en">
-<head>
-    <meta charset="UTF-8">
-    <title>{{ current_task.name }}</title>
+{% extends "projects/partials/base.html" %}
 
-</head>
-<body>
-{% if messages %}
+{% block title %}{{ current_task.name }}{% endblock %}
 
-    {% for message in messages %}
-        <div class="alert alert-{{ message.tags }}">
-            {{ message }}
-        </div>
-    {% endfor %}
-
-{% endif %}
-
+{% block content %}
 <h1>{{ current_task.name }}</h1>
-
-Criado em {{ current_task.created_at }}
-
+    <p>Criado em {{ current_task.created_at }}</p>
 
 <h2>Descrição</h2>
 <p>{{ current_task.description }}</p>
@@ -36,7 +21,4 @@ Criado em {{ current_task.created_at }}
 </button>
 <p><a href="{% url 'projects:project' current_project.id %}">Voltar para o projeto: {{ current_project.name }}</a></p>
 <p><a href="/">Voltar para o início</a></p>
-
-
-</body>
-</html>
+{% endblock %}

@@ -1,11 +1,8 @@
-<!DOCTYPE html>
-<html lang="en">
-<head>
-    <meta charset="UTF-8">
-    <title>Adicionar Projeto</title>
-</head>
-<body>
+{% extends "projects/partials/base.html" %}
 
+{% block title %}Editar Projeto{% endblock %}
+
+{% block content %}
 <h1>Editando Projeto "{{ current_project.name }}"</h1>
 <form method="POST">
     {% csrf_token %}
@@ -15,6 +12,4 @@
     <button type="submit" class="submit-button">Atualizar Projeto</button>
 
 </form>
-
-</body>
-</html>
+{% endblock %}

@@ -1,11 +1,8 @@
-<!DOCTYPE html>
-<html lang="en">
-<head>
-    <meta charset="UTF-8">
-    <title>Deletar Projeto</title>
-</head>
-<body>
+{% extends "projects/partials/base.html" %}
 
+{% block title %}Deletar Projeto{% endblock %}
+
+{% block content %}
 <form method="post">
     {% csrf_token %}
     <h1>Você está excluindo o projeto "{{ current_project.name }}"</h1>
@@ -23,7 +20,4 @@
     <button type="submit">Excluir</button>
     <button><a href="{% url 'projects:project' current_project.id %}">Cancelar</a></button>
 </form>
-
-
-</body>
-</html>
+{% endblock %}

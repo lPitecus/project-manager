@@ -1,21 +1,8 @@
-<!DOCTYPE html>
-<html lang="en">
-<head>
-    <meta charset="UTF-8">
-    <title>Adicionar Task</title>
+{% extends "projects/partials/base.html" %}
 
-</head>
-<body>
+{% block title %}Adicionar Task{% endblock %}
 
-{% if messages %}
-    {% for message in messages %}
-        <div class="alert alert-{{ message.tags }}">
-            {{ message }}
-        </div>
-    {% endfor %}
-{% endif %}
-
-
+{% block content %}
 <h1>Adicionar Nova Task</h1>
 
 <form method="post" action="
@@ -53,6 +40,4 @@
     <button type="submit" class="submit-button">Criar Task</button>
 
 </form>
-
-</body>
-</html>
+{% endblock %}
