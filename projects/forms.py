@@ -31,9 +31,10 @@ class ProjectForm(ModelForm):
 class TaskForm(ModelForm):
     class Meta:
         model = Task
-        fields = ['name', 'description', 'related_project']  # Mantemos 'related_project'
+        fields = ['name', 'description', 'status', 'related_project']  # Mantemos 'related_project'
         labels = {
             'name': 'Nome da Tarefa',
             'description': 'Descrição da Tarefa',
-            'related_project': 'Projeto Relacionado'
+            'related_project': 'Projeto Relacionado',
+            'status': 'Status da Tarefa'
         }

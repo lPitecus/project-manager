@@ -22,8 +22,21 @@ class Project(models.Model):
         return reverse('projects:project', kwargs={'pk': self.pk})
 
 class Task(models.Model):
+    STATUS_CHOICES = [
+        ('TODO', 'A Fazer'),
+        ('IN PROGRESS', 'Fazendo'),
+        ('PAUSED', 'Pausado'),
+        ('DONE', 'Concluído'),
+        ('CANCELED', 'Cancelado')
+    ]
+
     name = models.CharField(max_length=150)
     description = models.TextField(blank=True)
+    status = models.CharField(
+        max_length=15,
+        choices=STATUS_CHOICES,
+        default='TODO'
+    )
     created_at = models.DateTimeField(auto_now_add=True)
     related_project = models.ForeignKey(Project, on_delete=models.CASCADE)
     created_by = models.ForeignKey(User, on_delete=models.DO_NOTHING, related_name='tasks_created')

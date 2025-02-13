@@ -4,9 +4,10 @@
 
 {% block content %}
 <h1>{{ current_task.name }}</h1>
+    <h3>Status: {{ current_task.get_status_display }}</h3>
     <p>Criado em {{ current_task.created_at }}</p>
 
-<h2>Descrição</h2>
+    <h4>Descrição</h4>
 <p>{{ current_task.description }}</p>
 
 <p>Task criada por {{ current_task.created_by.username }}</p>

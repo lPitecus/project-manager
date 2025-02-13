@@ -20,6 +20,9 @@
     <label>{{ form.description.label }}</label>
     <p>{{ form.description }}</p>
 
+    <label>{{ form.status.label }}</label>
+    <p>{{ form.status }}</p>
+
 
     {% if current_project %}
         <input type="hidden" name="related_project" value="{{ current_project.id }}">
