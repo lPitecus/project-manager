@@ -1,5 +1,5 @@
 from django.contrib import messages
-from django.contrib.auth.mixins import LoginRequiredMixin
+from django.contrib.auth.mixins import LoginRequiredMixin, PermissionRequiredMixin
 from django.shortcuts import get_object_or_404, reverse
 from django.urls import reverse_lazy
 from django.views.generic import ListView, DetailView
@@ -9,11 +9,12 @@ from .forms import ProjectForm, TaskForm
 from .models import Project, Task
 
 
-class ProjectCreateView(LoginRequiredMixin, CreateView):
+class ProjectCreateView(LoginRequiredMixin, PermissionRequiredMixin, CreateView):
     login_url = "/users/login/"
     redirect_field_name = "projects/add_project.html"
     model = Project
     template_name = "projects/add_project.html"
+    permission_required = "projects.add_project"
     # O atributo form_class serve apenas para usar as labels e widgets definidos no forms.py.
     # Caso for preferível usar o nome padrão dos campos (definido no models.py), basta comentar a linha abaixo.
     form_class = ProjectForm
@@ -39,7 +40,7 @@ class ProjectListView(LoginRequiredMixin, ListView):
     # https://docs.djangoproject.com/en/5.1/topics/class-based-views/generic-display/#making-friendly-template-contexts
 
 
-class ProjectDetailView(LoginRequiredMixin, DetailView):
+class ProjectDetailView(LoginRequiredMixin, PermissionRequiredMixin, DetailView):
     # A classe genérica DetailView espera que uma chave primária seja passada como um parâmetro
     # na url chamado "pk" por padrão. Isso é usado para determinar qual objeto (nesse caso, um Project) deve
     # ser recuperado do banco de dados.
@@ -48,6 +49,7 @@ class ProjectDetailView(LoginRequiredMixin, DetailView):
     model = Project
     template_name = "projects/project.html"
     context_object_name = "current_project"
+    permission_required = "projects.view_project"
 
     def get_context_data(self, **kwargs):
         # O override do metodo "get_context_data" permite que seja criado um objeto de contexto personalizado, baseado
@@ -60,12 +62,13 @@ class ProjectDetailView(LoginRequiredMixin, DetailView):
     # https://docs.djangoproject.com/en/5.1/topics/class-based-views/generic-display/#adding-extra-context
 
 
-class ProjectUpdateView(LoginRequiredMixin, UpdateView):
+class ProjectUpdateView(LoginRequiredMixin, PermissionRequiredMixin, UpdateView):
     login_url = "/users/login/"
     redirect_field_name = "projects/edit_project.html"
     model = Project
     template_name = "projects/edit_project.html"
     context_object_name = "current_project"
+    permission_required = "projects.change_project"
     form_class = ProjectForm
 
     def form_valid(self, form):
@@ -75,12 +78,13 @@ class ProjectUpdateView(LoginRequiredMixin, UpdateView):
         return response
 
 
-class ProjectDeleteView(LoginRequiredMixin, DeleteView):
+class ProjectDeleteView(LoginRequiredMixin, PermissionRequiredMixin, DeleteView):
     login_url = "/users/login/"
     redirect_field_name = "projects/index.html"
     model = Project
     template_name = "projects/delete_project.html"
     context_object_name = "current_project"
+    permission_required = "projects.delete_project"
     success_url = reverse_lazy('projects:index')
 
     def form_valid(self, form):
@@ -94,12 +98,13 @@ class ProjectDeleteView(LoginRequiredMixin, DeleteView):
         return context
 
 
-class TaskCreateView(LoginRequiredMixin, CreateView):
+class TaskCreateView(LoginRequiredMixin, PermissionRequiredMixin, CreateView):
     login_url = "/users/login/"
     redirect_field_name = "projects/add_task.html"
     model = Task
     form_class = TaskForm
     template_name = "projects/add_task.html"
+    permission_required = "projects.add_task"
 
     def get_form_kwargs(self):
         # Adiciona o projeto relacionado ao formulário se `project_id` estiver presente na URL.
@@ -131,12 +136,13 @@ class TaskCreateView(LoginRequiredMixin, CreateView):
         return response  # Retorna a resposta padrão
 
 
-class TaskDetailView(LoginRequiredMixin, DetailView):
+class TaskDetailView(LoginRequiredMixin, PermissionRequiredMixin, DetailView):
     login_url = "/users/login/"
     redirect_field_name = "projects/task.html"
     model = Task
     template_name = "projects/task.html"
     context_object_name = "current_task"
+    permission_required = "projects.view_task"
 
     def get_object(self, queryset=None):
         # Override get_object to retrieve the specific Task object based on task_id and project_id.
@@ -159,12 +165,13 @@ class TaskDetailView(LoginRequiredMixin, DetailView):
         return reverse('projects:project', args=[self.object.related_project.id])
 
 
-class TaskUpdateView(LoginRequiredMixin, UpdateView):
+class TaskUpdateView(LoginRequiredMixin, PermissionRequiredMixin, UpdateView):
     login_url = "/users/login/"
     redirect_field_name = "projects/edit_task.html"
     model = Task
     template_name = "projects/edit_task.html"
     context_object_name = "current_task"
+    permission_required = "projects.change_task"
     form_class = TaskForm
 
     def form_valid(self, form):
@@ -190,12 +197,13 @@ class TaskUpdateView(LoginRequiredMixin, UpdateView):
         return get_object_or_404(Task, pk=task_id, related_project_id=project_id)
 
 
-class TaskDeleteView(LoginRequiredMixin, DeleteView):
+class TaskDeleteView(LoginRequiredMixin, PermissionRequiredMixin, DeleteView):
     login_url = "/users/login/"
     redirect_field_name = "projects/index.html"
     model = Task
     template_name = "projects/delete_task.html"
     context_object_name = "current_task"
+    permission_required = "projects.delete_task"
 
     def form_valid(self, form):
         response = super().form_valid(form)
