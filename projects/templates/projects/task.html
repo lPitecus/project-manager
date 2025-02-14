@@ -3,23 +3,94 @@
 {% block title %}{{ current_task.name }}{% endblock %}
 
 {% block content %}
-<h1>{{ current_task.name }}</h1>
-    <h3>Status: {{ current_task.get_status_display }}</h3>
-    <p>Criado em {{ current_task.created_at }}</p>
+    <div class="container py-4">
+        <!-- Task Header -->
+        <div class="row mb-4">
+            <div class="col">
+                <nav aria-label="breadcrumb" class="mb-4">
+                    <ol class="breadcrumb">
+                        <li class="breadcrumb-item"><a href="/" class="text-decoration-none"><i class="fas fa-home"></i></a>
+                        </li>
+                        <li class="breadcrumb-item"><a href="{% url 'projects:project' current_project.id %}"
+                                                       class="text-decoration-none">{{ current_project.name }}</a></li>
+                        <li class="breadcrumb-item active">{{ current_task.name }}</li>
+                    </ol>
+                </nav>
 
-    <h4>Descrição</h4>
-<p>{{ current_task.description }}</p>
+                <div class="d-flex justify-content-between align-items-start">
+                    <div>
+                        <h1 class="display-5 mb-2">{{ current_task.name }}</h1>
+                        <div class="d-flex align-items-center gap-3">
+                            <span class="badge bg-primary">{{ current_task.get_status_display }}</span>
+                            <small class="text-muted">
+                                <i class="far fa-calendar-alt me-1"></i>
+                                Criado em {{ current_task.created_at|date:"d/m/Y H:i" }}
+                            </small>
+                        </div>
+                    </div>
+                    <div class="btn-group">
+                        <a href="{% url 'projects:edit_task' current_project.id current_task.id %}"
+                           class="btn btn-outline-primary">
+                            <i class="fas fa-edit me-2"></i>Editar
+                        </a>
+                        <a href="{% url 'projects:delete_task' current_project.id current_task.id %}"
+                           class="btn btn-outline-danger">
+                            <i class="fas fa-trash-alt me-2"></i>Excluir
+                        </a>
+                    </div>
+                </div>
+            </div>
+        </div>
 
-<p>Task criada por {{ current_task.created_by.username }}</p>
-<p>Última modificação por {{ current_task.last_edited_by.username }}</p>
+        <!-- Task Content -->
+        <div class="row">
+            <div class="col-lg-8">
+                <div class="card shadow-sm mb-4">
+                    <div class="card-body">
+                        <h4 class="card-title h5 text-muted mb-3">Descrição</h4>
+                        <p class="card-text">{{ current_task.description }}</p>
+                    </div>
+                </div>
+            </div>
 
-<hr>
-<button>
-    <a href="{% url 'projects:edit_task' current_project.id current_task.id %}">Editar task</a>
-</button>
-<button>
-    <a href="{% url 'projects:delete_task' current_project.id current_task.id %}">Excluir task</a>
-</button>
-<p><a href="{% url 'projects:project' current_project.id %}">Voltar para o projeto: {{ current_project.name }}</a></p>
-<p><a href="/">Voltar para o início</a></p>
+            <div class="col-lg-4">
+                <div class="card shadow-sm">
+                    <div class="card-body">
+                        <h4 class="card-title h5 text-muted mb-3">Informações</h4>
+
+                        <div class="mb-3">
+                            <div class="small text-muted mb-1">Criado por</div>
+                            <div class="d-flex align-items-center">
+                                <i class="fas fa-user-circle me-2"></i>
+                                {{ current_task.created_by.username }}
+                            </div>
+                        </div>
+
+                        <div>
+                            <div class="small text-muted mb-1">Última modificação por</div>
+                            <div class="d-flex align-items-center">
+                                <i class="fas fa-edit me-2"></i>
+                                {{ current_task.last_edited_by.username }}
+                            </div>
+                        </div>
+                    </div>
+                </div>
+            </div>
+        </div>
+
+        <!-- Bottom Navigation -->
+        <div class="row mt-4">
+            <div class="col">
+                <div class="d-flex gap-2">
+                    <a href="{% url 'projects:project' current_project.id %}"
+                       class="btn btn-outline-secondary">
+                        <i class="fas fa-arrow-left me-2"></i>Voltar para o projeto
+                    </a>
+                    <a href="/" class="btn btn-outline-secondary">
+                        <i class="fas fa-home me-2"></i>Início
+                    </a>
+                </div>
+            </div>
+        </div>
+    </div>
 {% endblock %}

@@ -1,48 +1,125 @@
-<!DOCTYPE html>
-<html lang="en">
+<!doctype html>
+<html lang="en" class="min-vh-100">
 <head>
     <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1">
     <title>{% block title %}Project Manager{% endblock %}</title>
     <link href="https://cdn.jsdelivr.net/npm/bootstrap@5.3.3/dist/css/bootstrap.min.css" rel="stylesheet" integrity="sha384-QWTKZyjpPEjISv5WaRU9OFeRpok6YctnYmDr5pNlyT2bRjXh0JMhjY6hW+ALEwIH" crossorigin="anonymous">
+    <link rel="stylesheet" href="https://cdnjs.cloudflare.com/ajax/libs/font-awesome/5.15.4/css/all.min.css">
+    <style>
+        body {
+            display: flex;
+            flex-direction: column;
+            min-height: 100vh;
+        }
 
+        main {
+            flex: 1 0 auto;
+        }
+
+        .navbar-brand {
+            font-weight: 600;
+        }
+
+        .alert {
+            margin-bottom: 0;
+            border: 0;
+            border-radius: 0;
+        }
+    </style>
 </head>
 <body>
+<!-- Alert Messages -->
 {% if messages %}
     {% for message in messages %}
-        <div class="alert alert-{{ message.tags }}">
-            {{ message }}
+        <div class="alert alert-{{ message.tags }} alert-dismissible fade show" role="alert">
+            <div class="container">
+                <div class="d-flex align-items-center">
+                    {% if message.tags == 'success' %}
+                        <i class="fas fa-check-circle me-2"></i>
+                    {% elif message.tags == 'error' %}
+                        <i class="fas fa-exclamation-circle me-2"></i>
+                    {% elif message.tags == 'warning' %}
+                        <i class="fas fa-exclamation-triangle me-2"></i>
+                    {% elif message.tags == 'info' %}
+                        <i class="fas fa-info-circle me-2"></i>
+                    {% endif %}
+                    {{ message }}
+                    <button type="button" class="btn-close ms-auto" data-bs-dismiss="alert" aria-label="Close"></button>
+                </div>
+            </div>
         </div>
     {% endfor %}
 {% endif %}
 
-<header>
-    <h1><a href="{% url 'projects:index' %}">Gerenciador de Projetos</a></h1>
-    {% if greeting %}
-        <p>{{ greeting }}, {{ user.username }}</p>
-    {% endif %}
-    <nav>
-        <ul>
-            {% if user.is_authenticated %}
-                <form method="post" action="{% url 'users:logout' %}">
-                    {% csrf_token %}
-                    <button type="submit">Fazer Logout</button>
-                </form>
-            {% endif %}
-        </ul>
-    </nav>
-</header>
-<hr>
+<!-- Navigation -->
+<nav class="navbar navbar-expand-lg navbar-light bg-white shadow-sm">
+    <div class="container">
+        <a class="navbar-brand d-flex align-items-center" href="{% url 'projects:index' %}">
+            <i class="fas fa-tasks text-primary me-2"></i>
+            Gerenciador de Projetos
+        </a>
 
-<main>
+        {% if user.is_authenticated %}
+            <button class="navbar-toggler" type="button" data-bs-toggle="collapse" data-bs-target="#navbarContent">
+                <span class="navbar-toggler-icon"></span>
+            </button>
+
+            <div class="collapse navbar-collapse" id="navbarContent">
+                <ul class="navbar-nav me-auto">
+                    <li class="nav-item">
+                        <a class="nav-link" href="{% url 'projects:index' %}">
+                            <i class="fas fa-home me-1"></i> Início
+                        </a>
+                    </li>
+                </ul>
+
+                <div class="d-flex align-items-center gap-3">
+                    {% if greeting %}
+                        <div class="text-muted">
+                            <i class="fas fa-user-circle me-1"></i>
+                            {{ greeting }}, {{ user.username }}
+                        </div>
+                    {% endif %}
+
+                    <form method="post" action="{% url 'users:logout' %}">
+                        {% csrf_token %}
+                        <button type="submit" class="btn btn-outline-primary">
+                            <i class="fas fa-sign-out-alt me-1"></i>
+                            Fazer Logout
+                        </button>
+                    </form>
+                </div>
+            </div>
+            {% endif %}
+    </div>
+    </nav>
+
+<!-- Main Content -->
+<main class="py-4">
     {% block content %}
         <!-- Specific page content goes here -->
     {% endblock %}
 </main>
 
-<footer>
-    <p>&copy; {{ current_datetime.year }} Gerenciador de Projetos</p>
+<!-- Footer -->
+<footer class="py-4 bg-light mt-auto">
+    <div class="container">
+        <div class="row align-items-center">
+            <div class="col-12 text-center">
+                <p class="text-muted mb-0">
+                    <small>
+                        &copy; {{ current_datetime.year }} Gerenciador de Projetos.
+                        Todos os direitos reservados.
+                    </small>
+                </p>
+            </div>
+        </div>
+    </div>
 </footer>
-<script src="https://cdn.jsdelivr.net/npm/bootstrap@5.3.3/dist/js/bootstrap.bundle.min.js" integrity="sha384-YvpcrYf0tY3lHB60NNkmXc5s9fDVZLESaAA55NDzOxhy9GkcIdslK1eN7N6jIeHz" crossorigin="anonymous"></script>
 
+<script src="https://cdn.jsdelivr.net/npm/bootstrap@5.3.3/dist/js/bootstrap.bundle.min.js"
+        integrity="sha384-YvpcrYf0tY3lHB60NNkmXc5s9fDVZLESaAA55NDzOxhy9GkcIdslK1eN7N6jIeHz"
+        crossorigin="anonymous"></script>
 </body>
 </html>

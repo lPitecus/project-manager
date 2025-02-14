@@ -1,15 +1,44 @@
 {% extends "projects/partials/base.html" %}
+{% load form_filters %}
 
 {% block title %}Deletar Task{% endblock %}
 
 {% block content %}
-<form method="post">
-    {% csrf_token %}
-    <h1>Você está excluindo a task "{{ current_task.name }}"</h1>
-    <hr/>
-    <p>Tem certeza que deseja continuar?</p>
-    {{ form }}
-    <button type="submit">Excluir</button>
-    <button><a href="{% url 'projects:task' current_project.id current_task.id %}">Cancelar</a></button>
-</form>
+    <div class="container py-4">
+        <div class="row justify-content-center">
+            <div class="col-12 col-md-8 col-lg-6">
+                <div class="card border-danger shadow-sm">
+                    <div class="card-body">
+                        <div class="text-center mb-4">
+                            <i class="fas fa-exclamation-triangle text-danger fs-1 mb-3"></i>
+                            <h1 class="card-title h4">Excluir Task</h1>
+                            <p class="card-text text-muted">
+                                Você está excluindo a task "<strong>{{ current_task.name }}</strong>"
+                            </p>
+                        </div>
+
+                        <form method="post">
+                            {% csrf_token %}
+                            {{ form }}
+
+                            <div class="alert alert-danger mb-4">
+                                <i class="fas fa-exclamation-circle me-2"></i>
+                                Esta ação não pode ser desfeita.
+                            </div>
+
+                            <div class="d-flex gap-2 justify-content-center">
+                                <a href="{% url 'projects:task' current_project.id current_task.id %}"
+                                   class="btn btn-outline-secondary">
+                                    <i class="fas fa-times me-2"></i>Cancelar
+                                </a>
+                                <button type="submit" class="btn btn-danger">
+                                    <i class="fas fa-trash-alt me-2"></i>Excluir Task
+                                </button>
+                            </div>
+                        </form>
+                    </div>
+                </div>
+            </div>
+        </div>
+    </div>
 {% endblock %}

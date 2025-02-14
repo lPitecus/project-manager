@@ -3,29 +3,82 @@
 {% block title %}Gerenciador de Projetos{% endblock %}
 
 {% block content %}
-    <p><a href="{% url 'projects:add_project' %}">Novo Projeto</a></p>
-    <p><a href="{% url 'projects:add_task_global' %}">Nova Task</a></p>
-{% if project_list %}
+    <div class="container py-4">
+        <!-- Action buttons -->
+        <div class="d-flex gap-3 mb-4">
+            <a href="{% url 'projects:add_project' %}" class="btn btn-primary">
+                <i class="fas fa-plus-circle me-2"></i>Novo Projeto
+            </a>
+            <a href="{% url 'projects:add_task_global' %}" class="btn btn-outline-secondary">
+                <i class="fas fa-tasks me-2"></i>Nova Task
+            </a>
+        </div>
 
-    {% for projeto in project_list %}
+        {% if project_list %}
+            <div class="row row-cols-1 row-cols-md-2 row-cols-lg-3 g-4">
+                {% for projeto in project_list %}
+                    <div class="col">
+                        <div class="card h-100 shadow-sm hover-shadow">
+                            <div class="card-body">
+                                <div class="d-flex justify-content-between align-items-start mb-2">
+                                    <h2 class="card-title h4 mb-0" style="max-width: 80%; word-wrap: break-word;">
+                                        {{ projeto.name }}
+                                    </h2>
+                                    <span class="badge bg-primary rounded-pill ms-2 flex-shrink-0">
+                                    {{ projeto.task_set.count }} tasks
+                                </span>
+                                </div>
 
+                                <p class="card-text text-muted mb-3 text-truncate"
+                                   style="max-height: 4.5rem; overflow: hidden; display: -webkit-box; -webkit-line-clamp: 3; -webkit-box-orient: vertical;">
+                                    {{ projeto.description|truncatewords:30 }}
+                                </p>
 
-        <h2>{{ projeto.name }}</h2>
-        <span class="task-count">{{ projeto.task_set.count }} tasks</span>
+                                <a href="{% url 'projects:project' projeto.id %}"
+                                   class="btn btn-outline-primary btn-sm stretched-link">
+                                    Ver detalhes <i class="fas fa-arrow-right ms-1"></i>
+                                </a>
+                            </div>
+                        </div>
+                    </div>
+                {% endfor %}
+            </div>
+        {% else %}
+            <div class="text-center py-5">
+                <div class="mb-4">
+                    <i class="fas fa-folder-open text-muted" style="font-size: 4rem;"></i>
+                </div>
+                <h3 class="h4 mb-3">Nenhum projeto encontrado</h3>
+                <p class="text-muted">Comece criando seu primeiro projeto!</p>
+                <a href="{% url 'projects:add_project' %}" class="btn btn-primary mt-2">
+                    Criar Projeto
+                </a>
+            </div>
+        {% endif %}
+    </div>
 
+    <style>
+        /* Custom styles for cards */
+        .card {
+            transition: transform 0.2s ease-in-out, box-shadow 0.2s ease-in-out;
+        }
 
-        <p>{{ projeto.description|truncatewords:30 }}</p>
+        .card:hover {
+            transform: translateY(-5px);
+            box-shadow: 0 .5rem 1rem rgba(0, 0, 0, .15) !important;
+        }
 
+        /* Ensure the badge stays on one line */
+        .badge {
+            white-space: nowrap;
+        }
 
-        <a href="{% url 'projects:project' projeto.id %}" class="view-project">Ver detalhes →</a>
-
-
-    {% endfor %}
-
-{% else %}
-
-    <p>Nenhum projeto encontrado</p>
-    <p>Comece criando seu primeiro projeto!</p>
-
-{% endif %}
+        /* Custom truncation for long titles */
+        .card-title {
+            overflow-wrap: break-word;
+            hyphens: auto;
+            line-height: 1.3;
+            min-height: 1.3em;
+        }
+    </style>
 {% endblock %}
