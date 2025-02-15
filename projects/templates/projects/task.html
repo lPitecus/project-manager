@@ -22,13 +22,32 @@
                     <div>
                         <h1 class="display-5 mb-2">{{ current_task.name }}</h1>
                         <div class="d-flex align-items-center gap-3">
-                            <span class="badge bg-{{ current_task.status|status_to_bootstrap_class }}">
-                                {{ current_task.get_status_display }}
-                            </span>
-                            <small class="text-muted">
-                                <i class="far fa-calendar-alt me-1"></i>
-                                Criado em {{ current_task.created_at|date:"d/m/Y H:i" }}
-                            </small>
+                            <div class="dropdown">
+                                <button class="btn btn-{{ current_task.status|status_to_bootstrap_class }} dropdown-toggle"
+                                        type="button"
+                                        data-bs-toggle="dropdown"
+                                        aria-expanded="false">
+                                    {{ current_task.get_status_display }}
+                                </button>
+                                <ul class="dropdown-menu">
+                                    <form method="POST"
+                                          action="{% url 'projects:update_task_status' current_project.id current_task.id %}">
+                                        {% csrf_token %}
+                                        {% for status_code, status_label in current_task.STATUS_CHOICES %}
+                                            {% if status_code != current_task.status %}
+                                                <li>
+                                                    <button type="submit"
+                                                            name="status"
+                                                            value="{{ status_code }}"
+                                                            class="dropdown-item">
+                                                        {{ status_label }}
+                                                    </button>
+                                                </li>
+                                            {% endif %}
+                                        {% endfor %}
+                                    </form>
+                                </ul>
+                            </div>
                         </div>
                     </div>
                     <div class="btn-group">

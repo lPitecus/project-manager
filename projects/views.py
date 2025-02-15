@@ -1,8 +1,8 @@
 from django.contrib import messages
 from django.contrib.auth.mixins import LoginRequiredMixin, PermissionRequiredMixin
-from django.shortcuts import get_object_or_404, reverse
+from django.shortcuts import get_object_or_404, reverse, redirect
 from django.urls import reverse_lazy
-from django.views.generic import ListView, DetailView
+from django.views.generic import ListView, DetailView, View
 from django.views.generic.edit import CreateView, UpdateView, DeleteView
 
 from .forms import ProjectForm, TaskForm
@@ -195,6 +195,25 @@ class TaskUpdateView(LoginRequiredMixin, PermissionRequiredMixin, UpdateView):
 
         # Fetch the specific task that belongs to the given project
         return get_object_or_404(Task, pk=task_id, related_project_id=project_id)
+
+
+class TaskStatusUpdateView(LoginRequiredMixin, PermissionRequiredMixin, View):
+    permission_required = "projects.change_task"
+
+    def post(self, request, project_id, task_id):
+        task = get_object_or_404(Task, pk=task_id, related_project_id=project_id)
+        new_status = request.POST.get('status')
+        valid_statuses = dict(Task.STATUS_CHOICES).keys()
+
+        if new_status in valid_statuses:
+            task.status = new_status
+            task.last_edited_by = request.user
+            task.save()
+            messages.success(request, "Status atualizado com sucesso!")
+        else:
+            messages.error(request, "Status inválido!")
+
+        return redirect('projects:task', project_id=project_id, task_id=task_id)
 
 
 class TaskDeleteView(LoginRequiredMixin, PermissionRequiredMixin, DeleteView):
