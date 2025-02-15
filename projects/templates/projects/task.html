@@ -2,7 +2,35 @@
 {% load project_filters %}
 
 {% block title %}{{ current_task.name }}{% endblock %}
+{% block extra_css %}
+    <style>
+        .info-icon {
+            width: 20px;
+            display: inline-block;
+        }
 
+        .avatar-md {
+            width: 32px;
+            height: 32px;
+            object-fit: cover;
+        }
+
+        .avatar-sm {
+            width: 24px;
+            height: 24px;
+            object-fit: cover;
+        }
+
+        .collaborator-pill {
+            transition: background-color 0.3s ease;
+        }
+
+        .collaborator-pill:hover {
+            background-color: #cfcfd9 !important;
+        }
+    </style>
+
+{% endblock %}
 {% block content %}
     <div class="container py-4">
         <!-- Task Header -->
@@ -67,6 +95,7 @@
         <!-- Task Content -->
         <div class="row">
             <div class="col-lg-8">
+                <!-- Description Card -->
                 <div class="card shadow-sm mb-4">
                     <div class="card-body">
                         <h4 class="card-title h5 text-muted mb-3">Descrição</h4>
@@ -75,24 +104,80 @@
                 </div>
             </div>
 
+            <!-- Info Sidebar -->
             <div class="col-lg-4">
-                <div class="card shadow-sm">
+                <div class="card shadow-sm mb-4">
                     <div class="card-body">
                         <h4 class="card-title h5 text-muted mb-3">Informações</h4>
 
-                        <div class="mb-3">
-                            <div class="small text-muted mb-1">Criado por</div>
-                            <div class="d-flex align-items-center">
-                                <i class="fas fa-user-circle me-2"></i>
-                                {{ current_task.created_by.username }}
+                        <!-- Created Info -->
+                        <div class="mb-4">
+                            <div class="text-muted mb-2">
+                                <i class="fas fa-calendar-plus me-2"></i>Criado em
+                            </div>
+                            <div class="ps-4">{{ current_task.created_at|date:"d/m/Y H:i" }}</div>
+                        </div>
+
+                        <!-- Responsible -->
+                        <div class="mb-4">
+                            <div class="text-muted mb-2">
+                                <i class="fas fa-user-tie me-2"></i>Responsável
+                            </div>
+                            <div class="ps-4">
+                                {% if current_task.responsible %}
+                                    <div class="d-flex align-items-center">
+                                        {% if current_task.responsible.profile.avatar %}
+                                            <img src="{{ current_task.responsible.profile.avatar.url }}"
+                                                 alt="{{ current_task.responsible.username }}"
+                                                 class="rounded-circle me-2 avatar-md"
+                                                 style="width: 32px; height: 32px; object-fit: cover;">
+                                        {% else %}
+                                            <i class="fas fa-user-circle me-2 fs-4"></i>
+                                        {% endif %}
+                                        <span>{{ current_task.responsible.username }}</span>
+                                    </div>
+                                {% else %}
+                                    <span class="text-muted fst-italic">Não designado</span>
+                                {% endif %}
                             </div>
                         </div>
 
+                        <!-- Collaborators -->
+                        <div class="mb-4">
+                            <div class="text-muted mb-2">
+                                <i class="fas fa-users me-2"></i>Colaboradores
+                            </div>
+                            <div class="ps-4">
+                                {% if current_task.collaborators.all %}
+                                    <div class="d-flex flex-wrap gap-2">
+                                        {% for collaborator in current_task.collaborators.all %}
+                                            <div class="d-flex align-items-center bg-light rounded-pill px-3 py-1 collaborator-pill">
+                                                {% if collaborator.profile.avatar %}
+                                                    <img src="{{ collaborator.profile.avatar.url }}"
+                                                         alt="{{ collaborator.username }}"
+                                                         class="rounded-circle me-2"
+                                                         style="width: 24px; height: 24px; object-fit: cover;">
+                                                {% else %}
+                                                    <i class="fas fa-user-circle me-2"></i>
+                                                {% endif %}
+                                                <span class="small">{{ collaborator.username }}</span>
+                                            </div>
+                                        {% endfor %}
+                                    </div>
+                                {% else %}
+                                    <span class="text-muted fst-italic">Nenhum colaborador</span>
+                                {% endif %}
+                            </div>
+                        </div>
+
+                        <!-- Last Modified Info -->
                         <div>
-                            <div class="small text-muted mb-1">Última modificação por</div>
-                            <div class="d-flex align-items-center">
-                                <i class="fas fa-edit me-2"></i>
-                                {{ current_task.last_edited_by.username }}
+                            <div class="text-muted mb-2">
+                                <i class="fas fa-edit me-2"></i>Última modificação
+                            </div>
+                            <div class="ps-4">
+                                {{ current_task.last_edited_by.username }}<br>
+                                <small class="text-muted">{{ current_task.modified_at|date:"d/m/Y H:i" }}</small>
                             </div>
                         </div>
                     </div>
