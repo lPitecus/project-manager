@@ -55,10 +55,13 @@ class ProjectDetailView(LoginRequiredMixin, PermissionRequiredMixin, DetailView)
         # O override do metodo "get_context_data" permite que seja criado um objeto de contexto personalizado, baseado
         # na chave primária passada na url. Isso serve para passar como contexto adicional objetos relacionados ao pk
         # ou algo que não dependa dessa chave primária
-        context = super().get_context_data(**kwargs)  # Linha obrigatória para criar o objeto contexto.
+        context = super().get_context_data(
+            **kwargs
+        )  # Linha obrigatória para criar o objeto contexto.
         # Adicionando tarefas relacionadas ao contexto
         context["project_tasks"] = Task.objects.filter(related_project=self.object)
         return context
+
     # https://docs.djangoproject.com/en/5.1/topics/class-based-views/generic-display/#adding-extra-context
 
 
@@ -85,7 +88,7 @@ class ProjectDeleteView(LoginRequiredMixin, PermissionRequiredMixin, DeleteView)
     template_name = "projects/delete_project.html"
     context_object_name = "current_project"
     permission_required = "projects.delete_project"
-    success_url = reverse_lazy('projects:index')
+    success_url = reverse_lazy("projects:index")
 
     def form_valid(self, form):
         response = super().form_valid(form)
@@ -113,13 +116,17 @@ class TaskCreateView(LoginRequiredMixin, PermissionRequiredMixin, CreateView):
 
         if project_id:
             # Se um `project_id` foi passado na URL, preenche o campo related_project no formulário
-            kwargs["initial"] = {"related_project": get_object_or_404(Project, id=project_id)}
+            kwargs["initial"] = {
+                "related_project": get_object_or_404(Project, id=project_id)
+            }
 
         return kwargs  # Retorna os argumentos modificados
 
     def form_valid(self, form):
         # Define o projeto relacionado com base no `project_id` da URL ou no input do usuário.
-        project_id = self.kwargs.get("project_id")  # Obtém `project_id` da URL, se existir
+        project_id = self.kwargs.get(
+            "project_id"
+        )  # Obtém `project_id` da URL, se existir
 
         if project_id:
             # Se um `project_id` foi passado na URL, associa automaticamente a task a esse projeto
@@ -132,7 +139,9 @@ class TaskCreateView(LoginRequiredMixin, PermissionRequiredMixin, CreateView):
         form.instance.created_by = self.request.user
         form.instance.last_edited_by = self.request.user
         response = super().form_valid(form)  # Salva a task no banco de dados
-        messages.success(self.request, "Task criada com sucesso!")  # Exibe mensagem de sucesso
+        messages.success(
+            self.request, "Task criada com sucesso!"
+        )  # Exibe mensagem de sucesso
         return response  # Retorna a resposta padrão
 
 
@@ -162,7 +171,7 @@ class TaskDetailView(LoginRequiredMixin, PermissionRequiredMixin, DetailView):
 
     def get_success_url(self):
         # Redireciona para a página do projeto relacionado após a criação da tarefa.
-        return reverse('projects:project', args=[self.object.related_project.id])
+        return reverse("projects:project", args=[self.object.related_project.id])
 
 
 class TaskUpdateView(LoginRequiredMixin, PermissionRequiredMixin, UpdateView):
@@ -202,7 +211,7 @@ class TaskStatusUpdateView(LoginRequiredMixin, PermissionRequiredMixin, View):
 
     def post(self, request, project_id, task_id):
         task = get_object_or_404(Task, pk=task_id, related_project_id=project_id)
-        new_status = request.POST.get('status')
+        new_status = request.POST.get("status")
         valid_statuses = dict(Task.STATUS_CHOICES).keys()
 
         if new_status in valid_statuses:
@@ -213,7 +222,7 @@ class TaskStatusUpdateView(LoginRequiredMixin, PermissionRequiredMixin, View):
         else:
             messages.error(request, "Status inválido!")
 
-        return redirect('projects:task', project_id=project_id, task_id=task_id)
+        return redirect("projects:task", project_id=project_id, task_id=task_id)
 
 
 class TaskDeleteView(LoginRequiredMixin, PermissionRequiredMixin, DeleteView):
@@ -230,7 +239,9 @@ class TaskDeleteView(LoginRequiredMixin, PermissionRequiredMixin, DeleteView):
         return response
 
     def get_success_url(self):
-        return reverse_lazy('projects:project', kwargs={'pk': self.object.related_project_id})
+        return reverse_lazy(
+            "projects:project", kwargs={"pk": self.object.related_project_id}
+        )
 
     def get_context_data(self, **kwargs):
         context = super().get_context_data(**kwargs)
