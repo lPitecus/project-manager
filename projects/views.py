@@ -109,40 +109,43 @@ class TaskCreateView(LoginRequiredMixin, PermissionRequiredMixin, CreateView):
     template_name = "projects/add_task.html"
     permission_required = "projects.add_task"
 
-    def get_form_kwargs(self):
-        # Adiciona o projeto relacionado ao formulário se `project_id` estiver presente na URL.
-        kwargs = super().get_form_kwargs()  # Obtém os argumentos padrão do formulário
-        project_id = self.kwargs.get("project_id")  # Obtém o `project_id` da URL
+    def get_form(self, form_class=None):
+        form = super().get_form(form_class)
+        if "project_id" in self.kwargs:
+            # Remove o campo related_project do formulário quando há project_id na URL
+            del form.fields["related_project"]
+        return form
+
+    def get_context_data(self, **kwargs):
+        context = super().get_context_data(**kwargs)
+        project_id = self.kwargs.get("project_id")
 
         if project_id:
-            # Se um `project_id` foi passado na URL, preenche o campo related_project no formulário
-            kwargs["initial"] = {
-                "related_project": get_object_or_404(Project, id=project_id)
-            }
+            context["current_project"] = get_object_or_404(Project, id=project_id)
 
-        return kwargs  # Retorna os argumentos modificados
+        return context
 
     def form_valid(self, form):
-        # Define o projeto relacionado com base no `project_id` da URL ou no input do usuário.
-        project_id = self.kwargs.get(
-            "project_id"
-        )  # Obtém `project_id` da URL, se existir
+        project_id = self.kwargs.get("project_id")
 
         if project_id:
-            # Se um `project_id` foi passado na URL, associa automaticamente a task a esse projeto
+            # Se um project_id foi passado na URL, associa automaticamente a task a esse projeto
             form.instance.related_project = get_object_or_404(Project, id=project_id)
         elif not form.instance.related_project:
-            # Se a task for adicionada sem `project_id`, o usuário deve escolher um projeto manualmente
+            # Se a task for adicionada sem project_id, o usuário deve escolher um projeto manualmente
             messages.error(self.request, "Selecione um projeto para a tarefa.")
-            return self.form_invalid(form)  # Retorna o formulário com erro
+            return self.form_invalid(form)
 
         form.instance.created_by = self.request.user
         form.instance.last_edited_by = self.request.user
-        response = super().form_valid(form)  # Salva a task no banco de dados
-        messages.success(
-            self.request, "Task criada com sucesso!"
-        )  # Exibe mensagem de sucesso
-        return response  # Retorna a resposta padrão
+        response = super().form_valid(form)
+        messages.success(self.request, "Task criada com sucesso!")
+        return response
+
+    def get_success_url(self):
+        return reverse(
+            "projects:task", args=[self.object.related_project.id, self.object.id]
+        )
 
 
 class TaskDetailView(LoginRequiredMixin, PermissionRequiredMixin, DetailView):

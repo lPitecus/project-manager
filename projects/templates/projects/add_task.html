@@ -12,56 +12,21 @@
                         <h1 class="card-title h3 mb-4">Adicionar Nova Task</h1>
 
                         <form method="post" action="
-
                                 {% if current_project %}{% url 'projects:add_task' current_project.id %}{% else %}{% url 'projects:add_task_global' %}{% endif %}">
                             {% csrf_token %}
 
-                            <div class="mb-3">
-                                <label for="{{ form.name.id_for_label }}"
-                                       class="form-label">{{ form.name.label }}</label>
-                                {{ form.name }}
-                            </div>
-
-                            <div class="mb-3">
-                                <label for="{{ form.description.id_for_label }}"
-                                       class="form-label">{{ form.description.label }}</label>
-                                {{ form.description }}
-                            </div>
-
-                            <div class="mb-3">
-                                <label for="{{ form.status.id_for_label }}"
-                                       class="form-label">{{ form.status.label }}</label>
-                                {{ form.status }}
-                            </div>
-
-                            <div class="mb-3">
-                                <label for="{{ form.responsible.id_for_label }}"
-                                       class="form-label">{{ form.responsible.label }}</label>
-                                {{ form.responsible }}
-                            </div>
-
-                            <div class="mb-3">
-                                <label for="{{ form.collaborators.id_for_label }}"
-                                       class="form-label">{{ form.collaborators.label }}</label>
-                                {{ form.collaborators }}
-                                {% if form.collaborators.help_text %}
-                                    <div class="form-text">{{ form.collaborators.help_text }}</div>
-                                {% endif %}
-                            </div>
-
-                            {% if current_project %}
-                                <input type="hidden" name="related_project" value="{{ current_project.id }}">
-                            {% else %}
+                            {% for field in form %}
                                 <div class="mb-3">
-                                    <label for="{{ form.related_project.id_for_label }}"
-                                           class="form-label">{{ form.related_project.label }}</label>
-                                    {{ form.related_project }}
+                                    <label for="{{ field.id_for_label }}" class="form-label">{{ field.label }}</label>
+                                    {{ field }}
+                                    {% if field.help_text %}
+                                        <div class="form-text">{{ field.help_text }}</div>
+                                    {% endif %}
                                 </div>
-                            {% endif %}
+                            {% endfor %}
 
                             <div class="d-flex gap-2 justify-content-end mt-4">
                                 <a href="
-
                                         {% if current_project %}{% url 'projects:project' current_project.id %}{% else %}{% url 'projects:index' %}{% endif %}"
                                    class="btn btn-outline-secondary">
                                     <i class="fas fa-times me-2"></i>Cancelar
