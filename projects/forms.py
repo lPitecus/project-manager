@@ -5,19 +5,8 @@ from django.forms.widgets import Textarea, TextInput, Select, SelectMultiple
 from projects.models import Project, Task
 
 
+# https://docs.djangoproject.com/en/5.1/ref/forms/fields/#iterating-relationship-choices
 class UserSelectMultiple(SelectMultiple):
-    """
-    Custom SelectMultiple widget for selecting users.
-
-    This widget is customized to include user-specific data in the options it
-    generates. It appends additional attributes to the HTML representation of
-    each option, such as a user's avatar URL.
-
-    :ivar allow_multiple_selected: Indicates whether multiple selections are
-        allowed.
-    :type allow_multiple_selected: bool
-    """
-
     def create_option(
         self, name, value, label, selected, index, subindex=None, attrs=None
     ):
