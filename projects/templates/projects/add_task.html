@@ -12,6 +12,7 @@
                         <h1 class="card-title h3 mb-4">Adicionar Nova Task</h1>
 
                         <form method="post" action="
+
                                 {% if current_project %}{% url 'projects:add_task' current_project.id %}{% else %}{% url 'projects:add_task_global' %}{% endif %}">
                             {% csrf_token %}
 
@@ -45,6 +46,7 @@
 
                             <div class="d-flex gap-2 justify-content-end mt-4">
                                 <a href="
+
                                         {% if current_project %}{% url 'projects:project' current_project.id %}{% else %}{% url 'projects:index' %}{% endif %}"
                                    class="btn btn-outline-secondary">
                                     <i class="fas fa-times me-2"></i>Cancelar

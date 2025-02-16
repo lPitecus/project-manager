@@ -5,15 +5,23 @@ from django.db import migrations, models
 
 class Migration(migrations.Migration):
     dependencies = [
-        ('projects', '0003_project_created_by_project_last_edited_by_and_more'),
+        ("projects", "0003_project_created_by_project_last_edited_by_and_more"),
     ]
 
     operations = [
         migrations.AddField(
-            model_name='task',
-            name='status',
+            model_name="task",
+            name="status",
             field=models.CharField(
-                choices=[('TODO', 'A Fazer'), ('IN PROGRESS', 'Fazendo'), ('PAUSED', 'Pausado'), ('DONE', 'Concluído'),
-                         ('CANCELED', 'Cancelado')], default='TODO', max_length=15),
+                choices=[
+                    ("TODO", "A Fazer"),
+                    ("IN PROGRESS", "Fazendo"),
+                    ("PAUSED", "Pausado"),
+                    ("DONE", "Concluído"),
+                    ("CANCELED", "Cancelado"),
+                ],
+                default="TODO",
+                max_length=15,
+            ),
         ),
     ]

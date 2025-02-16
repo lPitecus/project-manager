@@ -5,7 +5,13 @@ from .models import Profile
 
 
 class ProfileAdmin(admin.ModelAdmin):
-    list_display = ["user__username", "user__email", "gender", "birth_date", "user__is_superuser"]
+    list_display = [
+        "user__username",
+        "user__email",
+        "gender",
+        "birth_date",
+        "user__is_superuser",
+    ]
     search_fields = ["user__username", "user__email"]
     list_filter = ["gender"]
 

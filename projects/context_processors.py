@@ -23,12 +23,8 @@ def user_gender_greeting(request):
     else:
         greeting = ""  # Not logged in or anonymous user
 
-    return {
-        "greeting": greeting
-    }
+    return {"greeting": greeting}
 
 
 def get_current_datetime(request):
-    return {
-        "current_datetime": datetime.datetime.now()
-    }
+    return {"current_datetime": datetime.datetime.now()}

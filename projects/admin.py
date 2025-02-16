@@ -1,5 +1,7 @@
 from django.contrib import admin
+
 from .models import Project, Task
+
 
 class TaskInline(admin.StackedInline):
     model = Task
@@ -16,6 +18,7 @@ class TaskAdmin(admin.ModelAdmin):
     search_fields = ["name"]
     list_editable = ["related_project"]
     list_filter = ["related_project"]
+
 
 # Register your models here.
 admin.site.register(Project, ProjectAdmin)
