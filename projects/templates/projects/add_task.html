@@ -19,19 +19,34 @@
                             <div class="mb-3">
                                 <label for="{{ form.name.id_for_label }}"
                                        class="form-label">{{ form.name.label }}</label>
-                                {{ form.name|addclass:"form-control" }}
+                                {{ form.name }}
                             </div>
 
                             <div class="mb-3">
                                 <label for="{{ form.description.id_for_label }}"
                                        class="form-label">{{ form.description.label }}</label>
-                                {{ form.description|addclass:"form-control" }}
+                                {{ form.description }}
                             </div>
 
                             <div class="mb-3">
                                 <label for="{{ form.status.id_for_label }}"
                                        class="form-label">{{ form.status.label }}</label>
-                                {{ form.status|addclass:"form-select" }}
+                                {{ form.status }}
+                            </div>
+
+                            <div class="mb-3">
+                                <label for="{{ form.responsible.id_for_label }}"
+                                       class="form-label">{{ form.responsible.label }}</label>
+                                {{ form.responsible }}
+                            </div>
+
+                            <div class="mb-3">
+                                <label for="{{ form.collaborators.id_for_label }}"
+                                       class="form-label">{{ form.collaborators.label }}</label>
+                                {{ form.collaborators }}
+                                {% if form.collaborators.help_text %}
+                                    <div class="form-text">{{ form.collaborators.help_text }}</div>
+                                {% endif %}
                             </div>
 
                             {% if current_project %}
@@ -40,7 +55,7 @@
                                 <div class="mb-3">
                                     <label for="{{ form.related_project.id_for_label }}"
                                            class="form-label">{{ form.related_project.label }}</label>
-                                    {{ form.related_project|addclass:"form-select" }}
+                                    {{ form.related_project }}
                                 </div>
                             {% endif %}
 
