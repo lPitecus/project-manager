@@ -46,6 +46,7 @@ class TaskForm(ModelForm):
             "related_project": "Projeto Relacionado",
             "status": "Status da Tarefa",
             "responsible": "Responsável pela tarefa",
+            "collaborators": "Colaboradores da tarefa",
         }
         widgets = {
             "name": TextInput(
