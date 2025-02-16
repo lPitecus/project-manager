@@ -1,5 +1,5 @@
 from django.forms import ModelForm
-from django.forms.widgets import Textarea, TextInput, Select, CheckboxSelectMultiple
+from django.forms.widgets import Textarea, TextInput, Select, SelectMultiple
 
 from projects.models import Project, Task
 
@@ -49,19 +49,16 @@ class TaskForm(ModelForm):
             "collaborators": "Colaboradores da tarefa",
         }
         widgets = {
-            "name": TextInput(
-                attrs={
-                    "class": "form-control",
-                    "placeholder": "Digite o nome da tarefa",
-                }
-            ),
-            "description": Textarea(
-                attrs={
-                    "class": "form-control",
-                }
-            ),
+            "name": TextInput(attrs={"class": "form-control"}),
+            "description": Textarea(attrs={"class": "form-control"}),
             "status": Select(attrs={"class": "form-select"}),
             "related_project": Select(attrs={"class": "form-select"}),
             "responsible": Select(attrs={"class": "form-select"}),
-            "collaborators": CheckboxSelectMultiple(),
+            "collaborators": SelectMultiple(
+                attrs={
+                    "class": "js-example-basic-multiple",
+                    "name": "collaborators[]",
+                    "multiple": "multiple",
+                }
+            ),
         }
