@@ -137,8 +137,24 @@
         crossorigin="anonymous"></script>
 <script src="https://cdn.jsdelivr.net/npm/select2@4.1.0-rc.0/dist/js/select2.min.js"></script>
 <script>
+    function formatState(state) {
+        if (!state.id) {
+            return state.text;
+        }
+
+        // Obtém a URL do avatar da opção selecionada
+        var avatarUrl = $(state.element).data("avatar");
+
+        // Retorna o HTML formatado com a imagem correta para cada usuário
+        return $('<span><img src="' + avatarUrl + '" class="avatar-small"/> ' + state.text + '</span>');
+    }
+
+
     $(document).ready(function () {
-        $('.js-example-basic-multiple').select2();
+        $(".js-example-basic-multiple").select2({
+            templateResult: formatState,  // Formata as opções com imagem
+            templateSelection: formatState  // Formata a opção selecionada
+        });
     });
 </script>
 {% block extra_js %}{% endblock %}

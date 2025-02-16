@@ -1,7 +1,39 @@
+from django.contrib.auth.models import User
 from django.forms import ModelForm
 from django.forms.widgets import Textarea, TextInput, Select, SelectMultiple
 
 from projects.models import Project, Task
+
+
+class UserSelectMultiple(SelectMultiple):
+    """
+    Custom SelectMultiple widget for selecting users.
+
+    This widget is customized to include user-specific data in the options it
+    generates. It appends additional attributes to the HTML representation of
+    each option, such as a user's avatar URL.
+
+    :ivar allow_multiple_selected: Indicates whether multiple selections are
+        allowed.
+    :type allow_multiple_selected: bool
+    """
+
+    def create_option(
+        self, name, value, label, selected, index, subindex=None, attrs=None
+    ):
+        option = super().create_option(
+            name, value, label, selected, index, subindex=subindex, attrs=attrs
+        )
+        # Verifica se o valor não é None e obtém o ID correto
+        if value is not None and hasattr(value, "value"):
+            user_id = value.value  # Captura o ID corretamente
+        else:
+            user_id = value  # Caso seja um número normal
+        user = User.objects.get(pk=user_id)  # Obtém o usuário
+        option["attrs"][
+            "data-avatar"
+        ] = user.profile.avatar.url  # Sempre terá um avatar
+        return option
 
 
 # https://docs.djangoproject.com/en/5.1/topics/forms/modelforms/#overriding-the-default-fields
@@ -54,7 +86,7 @@ class TaskForm(ModelForm):
             "status": Select(attrs={"class": "form-select"}),
             "related_project": Select(attrs={"class": "form-select"}),
             "responsible": Select(attrs={"class": "form-select"}),
-            "collaborators": SelectMultiple(
+            "collaborators": UserSelectMultiple(
                 attrs={
                     "class": "js-example-basic-multiple",
                     "name": "collaborators[]",
