@@ -46,6 +46,8 @@
         </div>
 
         <!-- Tasks Section -->
+        <!-- Tasks Section -->
+        <!-- Tasks Section -->
         <div class="row">
             <div class="col">
                 <div class="d-flex justify-content-between align-items-center mb-4">
@@ -56,44 +58,65 @@
                 </div>
 
                 {% if project_tasks %}
-                    <div class="row row-cols-1 row-cols-md-2 g-4">
-                        {% for task in project_tasks %}
-                            <div class="col">
-                                <div class="card h-100 shadow-sm border-{{ task.status|status_to_bootstrap_class }}">
-                                    <div class="card-body">
-                                        <div class="d-flex justify-content-between align-items-start mb-2">
-                                            <h3 class="h5 card-title mb-0">
+                    <div class="table-responsive">
+                        {% regroup project_tasks by get_status_display as status_list %}
+                        {% for status in status_list %}
+                            <div class="d-flex align-items-center gap-2 mt-4 mb-3">
+                                <h4 class="mb-0">
+                                    <span class="badge bg-{{ status.list.0.status|status_to_bootstrap_class }} p-2">
+                                        {% if status.grouper == 'A Fazer' %}
+                                            <i class="fas fa-clipboard-list me-2"></i>
+                                        {% elif status.grouper == 'Fazendo' %}
+                                            <i class="fas fa-spinner me-2"></i>
+                                        {% elif status.grouper == 'Pausado' %}
+                                            <i class="fas fa-pause me-2"></i>
+                                        {% elif status.grouper == 'Concluído' %}
+                                            <i class="fas fa-check me-2"></i>
+                                        {% elif status.grouper == 'Cancelado' %}
+                                            <i class="fas fa-times me-2"></i>
+                                        {% endif %}
+                                        {{ status.grouper }}
+                                    </span>
+                                </h4>
+                                <span class="text-muted small">({{ status.list|length }}
+                                    {% if status.list|length == 1 %}tarefa{% else %}tarefas{% endif %})</span>
+                            </div>
+                            <table class="table table-hover align-middle">
+                                <thead>
+                                <tr>
+                                    <th style="width: 25%">Nome</th>
+                                    <th style="width: 45%">Descrição</th>
+                                    <th style="width: 15%">Data de Criação</th>
+                                    <th style="width: 15%" class="text-end">Ações</th>
+                                </tr>
+                                </thead>
+                                <tbody>
+                                {% for task in status.list %}
+                                    <tr>
+                                        <td>
                                                 <a href="{% url 'projects:task' current_project.id task.id %}"
                                                    class="text-decoration-none">
                                                     {{ task.name }}
                                                 </a>
-                                            </h3>
-                                            <div class="d-flex gap-2 align-items-center">
-                                                <span class="badge bg-{{ task.status|status_to_bootstrap_class }}">
-                                                    {% if task.status == 'TODO' %}
-                                                        <i class="fas fa-clipboard-list me-1"></i>
-                                                    {% elif task.status == 'IN PROGRESS' %}
-                                                        <i class="fas fa-spinner me-1"></i>
-                                                    {% elif task.status == 'PAUSED' %}
-                                                        <i class="fas fa-pause me-1"></i>
-                                                    {% elif task.status == 'DONE' %}
-                                                        <i class="fas fa-check me-1"></i>
-                                                    {% elif task.status == 'CANCELED' %}
-                                                        <i class="fas fa-times me-1"></i>
-                                                    {% endif %}
-                                                    {{ task.get_status_display }}
-                                                </span>
-                                                <span class="badge bg-light text-dark">
-                                                    {{ task.created_at|date:"M d, Y" }}
-                                                </span>
+                                        </td>
+                                        <td class="text-muted">{{ task.description|truncatewords:20 }}</td>
+                                        <td>{{ task.created_at|date:"M d, Y" }}</td>
+                                        <td class="text-end">
+                                            <div class="btn-group btn-group-sm">
+                                                <a href="{% url 'projects:task' current_project.id task.id %}"
+                                                   class="btn btn-outline-primary">
+                                                    <i class="fas fa-eye"></i>
+                                                </a>
+                                                <a href="{% url 'projects:edit_task' current_project.id task.id %}"
+                                                   class="btn btn-outline-secondary">
+                                                    <i class="fas fa-edit"></i>
+                                                </a>
                                             </div>
-                                        </div>
-                                        <p class="card-text text-muted small">
-                                            {{ task.description|truncatewords:20 }}
-                                        </p>
-                                    </div>
-                                </div>
-                            </div>
+                                        </td>
+                                    </tr>
+                                {% endfor %}
+                                </tbody>
+                            </table>
                         {% endfor %}
                     </div>
                 {% else %}

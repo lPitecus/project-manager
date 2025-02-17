@@ -56,7 +56,7 @@
             </div>
         {% endif %}
     </div>
-
+    {% block extra_css %}
     <style>
         /* Custom styles for cards */
         .card {
@@ -81,4 +81,5 @@
             min-height: 1.3em;
         }
     </style>
+    {% endblock %}
 {% endblock %}

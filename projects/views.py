@@ -59,7 +59,9 @@ class ProjectDetailView(LoginRequiredMixin, PermissionRequiredMixin, DetailView)
             **kwargs
         )  # Linha obrigatória para criar o objeto contexto.
         # Adicionando tarefas relacionadas ao contexto
-        context["project_tasks"] = Task.objects.filter(related_project=self.object)
+        context["project_tasks"] = Task.objects.filter(
+            related_project=self.object
+        ).order_by("-status")
         return context
 
     # https://docs.djangoproject.com/en/5.1/topics/class-based-views/generic-display/#adding-extra-context
