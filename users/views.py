@@ -1,5 +1,7 @@
 from django.contrib import messages
 from django.shortcuts import render, redirect
+from django.views import View
+from django.views.generic import DetailView
 
 from users.models import Profile
 from .forms import UserRegisterForm
@@ -27,3 +29,13 @@ def register(request):
     else:
         form = UserRegisterForm()
     return render(request, "users/register.html", {"form": form})
+
+
+class UserProfile(DetailView):
+    login_url = "/users/login/"
+    redirect_field_name = "users/user_profile.html"
+    template_name = "users/user_profile.html"
+    context_object_name = "current_user_profile"
+
+    def get_object(self, queryset=None):
+        return Profile.objects.get(user=self.request.user)
