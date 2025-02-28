@@ -261,3 +261,13 @@ class TaskDeleteView(LoginRequiredMixin, PermissionRequiredMixin, DeleteView):
 
         # Fetch the specific task that belongs to the given project
         return get_object_or_404(Task, pk=task_id, related_project_id=project_id)
+
+
+class UserTasksListView(LoginRequiredMixin, ListView):
+    login_url = "/users/login/"
+    redirect_field_name = "projects/user_tasks.html"
+    template_name = "projects/user_tasks.html"
+    context_object_name = "current_user_tasks"
+
+    def get_queryset(self):
+        return Task.objects.filter(responsible=self.request.user)

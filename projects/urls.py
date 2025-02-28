@@ -44,4 +44,5 @@ urlpatterns = [
         views.TaskDeleteView.as_view(),
         name="delete_task",
     ),
+    path("my-tasks", views.UserTasksListView.as_view(), name="user_tasks"),
 ]
