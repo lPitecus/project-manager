@@ -14,20 +14,9 @@ Including another URLconf
     1. Import the include() function: from django.urls import include, path
     2. Add a URL to urlpatterns:  path('blog/', include('blog.urls'))
 """
-
-from debug_toolbar.toolbar import debug_toolbar_urls
-from django.conf import settings
-from django.conf.urls.static import static
 from django.contrib import admin
-from django.urls import path, include
+from django.urls import path
 
-# Nessa lista devem ser colocadas as urls criadas no projects/urls.py
-urlpatterns = (
-    [
-        path("admin/", admin.site.urls),
-        path("", include("projects.urls")),
-        path("users/", include("users.urls")),
-    ]
-    + debug_toolbar_urls()
-    + static(settings.MEDIA_URL, document_root=settings.MEDIA_ROOT)
-)
+urlpatterns = [
+    path('admin/', admin.site.urls),
+]
